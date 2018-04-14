@@ -16,8 +16,6 @@ class Sensor{
 	private:
 		int id;
 		int hop;				// シンクノードまでのホップ数
-		int *near_sensor;		// 近くのセンサ
-		int near_number;		// 近くのセンサの数
 		double x;				// x座標
 		double y;				// y座標
 
@@ -29,8 +27,4 @@ class Sensor{
 
 /***************計算のための関数*******************************/
 
-double cal_distance(double x1, double y1, double x2, double y2);	//2点間距離を導出する関数
-
-double cal_distance(double x1, double y1, double x2, double y2){
-	return sqrt( (x2-x1)*(x2-x1) + (y2-y1)*(y2-y1) );
-}
+double cal_d(double x1, double y1, double x2, double y2);	//2点間距離を導出する関数

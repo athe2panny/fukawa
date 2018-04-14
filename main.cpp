@@ -2,7 +2,7 @@
 
 int main(void){
 
-	Sensor sensor[SensorN];
+	Sensor sensor[Sensor_N];
 
 	for (int i = 0; i < Sensor_N; i++){
 		sensor[i].set_id_location(i);

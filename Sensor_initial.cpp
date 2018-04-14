@@ -3,6 +3,11 @@
 /*センサの初期設定に関する記述*/
 /*センサID:0はシンクノード*/
 
+/*２点間距離の計算*/
+double cal_d(double x1, double y1, double x2, double y2){
+	return sqrt( (x2-x1)*(x2-x1) + (y2-y1)*(y2-y1) );
+}
+
 /*ノードを1*1エリアにばらまく関数*/
 void Sensor::set_id_location(int n){
 
