@@ -34,11 +34,16 @@ void Sensor::set_id_location(int n){
 	
 }
 
+void Sensor::set_Sensor_hop(int n){
+	hop = n;
+}
+
 /*センサの内容を表示させる関数*/
 void Sensor::disp(){
 	std::cout << "センサID:" << id << std::endl;
 	std::cout << "x座標:" << x << std::endl;
-	std::cout << "y座標:" << y << '\n' << std::endl;
+	std::cout << "y座標:" << y << std::endl;
+	std::cout << "ホップ数" << hop << '\n' << std::endl; 
 }
 
 /*センサノードの配列と二次元配列を引数として受け取り，隣接行列を作る関数*/
@@ -56,7 +61,7 @@ void make_adjacency_matrix(Sensor *s, std::vector<std::vector<int> > &array2D){
 }
 
 //シンクノードからセンサノードまでのホップ数を設定する関数
-void set_hop(std::vector<std::vector<int> > &array2D, std::vector<int> &hop_check){
+void set_hop(std::vector<std::vector<int> > &array2D, std::vector<int> &hop_check, Sensor *s){
 
 	int hierarchy = 1;						//シンクノードまでのホップ数をカウントする変数
 	int count = 0;							//ループの終わりを管理する変数
@@ -82,6 +87,10 @@ void set_hop(std::vector<std::vector<int> > &array2D, std::vector<int> &hop_chec
 			}
 		}
 		hierarchy++;
+	}
+
+	for (int n = 0; n < SensorN; n++){
+		s[n].set_Sensor_hop(hop_check[n]);
 	}
 
 }
