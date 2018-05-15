@@ -48,10 +48,40 @@ void make_adjacency_matrix(Sensor *s, std::vector<std::vector<int> > &array2D){
 	for(int i=0;i<SensorN;i++){
 		for(int j=0;j<SensorN;j++){
 			d = cal_d(s[i].Getx(),s[i].Gety(),s[j].Getx(),s[j].Gety());
-			if(d <= Sensorr){
+			if(d <= Sensorr && d != 0 ){
 				array2D[i][j] = 1;
 			}
 		}
+	}
+}
+
+//シンクノードからセンサノードまでのホップ数を設定する関数
+void set_hop(std::vector<std::vector<int> > &array2D, std::vector<int> &hop_check){
+
+	int hierarchy = 1;						//シンクノードまでのホップ数をカウントする変数
+	int count = 0;							//ループの終わりを管理する変数
+
+	for(int j=0;j<SensorN;j++){
+		if(array2D[0][j] == 1 && hop_check[j] == 0){	//hierarchyが登録されていない隣接ノードを対象
+			hop_check[j] = hierarchy;
+			count++;
+		}
+	}
+
+ 	while(count < SensorN - 1){							//全てのノードで設定するまで
+		for(int i=0;i<SensorN;i++){
+			if(hop_check[i] == hierarchy){			//階層ごとに隣接ノードの探索
+
+				for(int j=0;j<SensorN;j++){
+					if(array2D[i][j] == 1 && hop_check[j] == 0 && j != 0){	//hierarchyが登録されていない隣接ノードを対象
+						hop_check[j] = hierarchy + 1;
+						count++;
+					}
+				}
+
+			}
+		}
+		hierarchy++;
 	}
 
 }
@@ -60,4 +90,8 @@ void make_adjacency_matrix(Sensor *s, std::vector<std::vector<int> > &array2D){
 
 
 
-//シンクノードからセンサノードの番号決定
+
+
+
+
+

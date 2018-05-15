@@ -7,7 +7,7 @@
 
 const int SensorN = 20;		//センサの数
 const int Sensorb = 3;			//センサー複製数
-const double Sensorr = 0.2;	//センサが通信できる距離
+const double Sensorr = 0.3;	//センサが通信できる距離
 const int SensorP = 1;			//各センサのパケット数
 const int PacketSize = 80;		//送信パケット長
 
@@ -24,6 +24,10 @@ class Sensor{
 		double Gety();	//yの取得
 		void set_id_location(int id);		//id,x,yを設定する関数
 		void disp();						//内容を出力するメンバ関数宣言
+		
+
+		Sensor():
+			hop(0){}
 	};
 
 /***************計算のための関数*******************************/
@@ -33,3 +37,4 @@ double cal_d(double x1, double y1, double x2, double y2);	//2点間距離を導�
 /***********************隣接行列******************************/
 
 void make_adjacency_matrix(Sensor *s, std::vector<std::vector<int> > &array2D);		/*隣接行列を作る関数*/
+void set_hop(std::vector<std::vector<int> > &array2D, std::vector<int> &hop_check);						//隣接行列からホップ数配列を設定する関数
