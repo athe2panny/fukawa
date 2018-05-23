@@ -1,6 +1,7 @@
 //LT符号化に伴うパケットのノード間移動について定義する
 #include "definition.hpp"
 
+//パケットの内容を表示する関数
 void Packet::disp(){
 	std::cout << "パケットID:" << Pid << std::endl;
 	std::cout << "次数:" << degree << std::endl;
@@ -24,15 +25,13 @@ void Packet::set_Packet(int n, int id){
 	degree = 3;									//次数
 	MixingTime = 3;								//ミキシングタイム
 	nodeNumber = std::vector<int>(SensorN);		//ノード番号
-	nodeNumber[0] = id;
-	bit = std::vector<int>(BITN);				//ビットシーケンスデータ
-	bit_generator(bit);
-
-
+	nodeNumber[0] = id;				
+	bit_generator(bit);							//ビットシーケンスデータ
+  
 }
 
 //データシーケンス生成
-void bit_generator(std::vector<int> &bit){
+void bit_generator(int *bit){
 	
 	std::random_device rnd;     						// 非決定的な乱数生成器
     std::mt19937_64 mt(rnd());							// 乱数生成
@@ -87,11 +86,16 @@ int transition_id(int now_id, std::vector<std::vector<int> > &array2D){
 
 }
 
-//transmitter
+//引数:ビットシーケンス 出力:ビットシーケンス 
+//ビットシーケンスから通信路を通した時のビットシーケンスを返す関数
+void transmitter_to_receiver(int *transmitted_bit, int *received_bit){
 
-//noise
+	double transmitted_signal[SYMBOLN][2], received_signal[SYMBOLN][2];
 
-//receiver
+	transmitter(transmitted_bit, transmitted_signal);
+	awgn(transmitted_signal, received_signal);
+	receiver(received_signal, received_bit);
+}
 
 
 //パケット更新

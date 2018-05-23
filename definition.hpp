@@ -3,6 +3,17 @@
 #include <random>
 #include <vector>
 
+/**************変数の定義(transmitter,noise,receiver関連)*************************************/
+
+#define sqr(x) ((x)*(x))
+const double PI = 3.141592654;	/* acos(-1.0) */
+const double OneBySqrt2 = 0.707106781;	/* 1.0/sqrt(2.0) */
+const double SYMBOL_RATE = 42.0e3;
+const double Ts = (1.0/SYMBOL_RATE);
+const int SYMBOLN = 64;
+const int BITN = (SYMBOLN*2);
+
+
 /**************変数の定義*************************************/
 
 const int SensorN = 30;		//センサの数
@@ -10,7 +21,6 @@ const int Sensorb = 3;			//センサーのパケット複製数
 const double Sensorr = 0.3;	//センサが通信できる距離
 const int SensorP = 1;			//各センサのパケット数
 const int PacketSize = 80;		//送信パケット長
-const int BITN = 128;
 
 /**************センサクラスの宣言******************************/
 class Sensor{
@@ -39,7 +49,7 @@ class Packet{
 		int degree;						//次数
 		int MixingTime;					//ミキシングタイム
 		std::vector<int> nodeNumber;	//ノード番号
-		std::vector<int> bit;			//ビットシーケンスデータ
+		int bit[BITN];			//ビットシーケンスデータ
 
 	public:
 		void set_Packet(int Pid, int id);		//id,次数,ミキシングタイム,ノード番号,データ
@@ -57,7 +67,7 @@ void set_hop(std::vector<std::vector<int> > &array2D, std::vector<int> &hop_chec
 
 /***********************パケット生成******************************/
 
-void bit_generator(std::vector<int> &bit);		//ビット生成
+void bit_generator(int *bit);		//ビット生成
 int transition_id(int id, std::vector<std::vector<int> > &array2D);						//遷移先idを決定する関数ゆ
 
 /***********************transmitter******************************/
@@ -71,6 +81,7 @@ void awgn(double (*transmitted_signal)[2], double (*received_signal)[2]);
 
 
 /***********************receiver******************************/
+void receiver(double (*signal)[2], int (*bit));
 void QPSK_demodulator_cd(double (*signal)[2], int (*bit));
 
 
