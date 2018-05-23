@@ -6,10 +6,11 @@
 /**************変数の定義*************************************/
 
 const int SensorN = 30;		//センサの数
-const int Sensorb = 3;			//センサー複製数
+const int Sensorb = 3;			//センサーのパケット複製数
 const double Sensorr = 0.3;	//センサが通信できる距離
 const int SensorP = 1;			//各センサのパケット数
 const int PacketSize = 80;		//送信パケット長
+const int BITN = 128;
 
 /**************センサクラスの宣言******************************/
 class Sensor{
@@ -32,6 +33,18 @@ class Sensor{
 	};
 
 /*************パケットクラスの宣言******************************/
+class Packet{
+	private:
+		int Pid;						//パケットid
+		int degree;						//次数
+		int MixingTime;					//ミキシングタイム
+		std::vector<int> nodeNumber;	//ノード番号
+		std::vector<int> bit;			//ビットシーケンスデータ
+
+	public:
+		void set_Packet(int Pid, int id);		//id,次数,ミキシングタイム,ノード番号,データ
+		void disp();							//内容を出力するメンバ関数宣言
+};
 
 /***************計算のための関数*******************************/
 
@@ -41,3 +54,28 @@ double cal_d(double x1, double y1, double x2, double y2);	//2点間距離を導�
 
 void make_adjacency_matrix(Sensor *s, std::vector<std::vector<int> > &array2D);		/*隣接行列を作る関数*/
 void set_hop(std::vector<std::vector<int> > &array2D, std::vector<int> &hop_check, Sensor *s);						//隣接行列からホップ数配列を設定する関数
+
+/***********************パケット生成******************************/
+
+void bit_generator(std::vector<int> &bit);		//ビット生成
+int transition_id(int id, std::vector<std::vector<int> > &array2D);						//遷移先idを決定する関数ゆ
+
+/***********************transmitter******************************/
+void transmitter(int (*bit), double (*signal)[2]);
+void BPSK_modulator(int (*bit), double (*signal)[2]);
+
+
+
+/***********************noise******************************/
+void awgn(double (*transmitted_signal)[2], double (*received_signal)[2]);
+
+
+/***********************receiver******************************/
+void QPSK_demodulator_cd(double (*signal)[2], int (*bit));
+
+
+
+
+
+
+

@@ -34,6 +34,7 @@ void Sensor::set_id_location(int n){
 	
 }
 
+/*ホップ数を設定する関数*/
 void Sensor::set_Sensor_hop(int n){
 	hop = n;
 }
