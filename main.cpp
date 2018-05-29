@@ -31,11 +31,21 @@ int main(void){
 	// 	}
 	// 	std::cout << std::endl;
 	// }
-	int now_id = 0;
-	std::cout << transition_id(now_id, array2D) << std::endl;
-	packet[0].set_Packet(0,0);
-	packet[0].disp();
+
+	// int now_id = 0;
+	// std::cout << transition_id(now_id, array2D) << std::endl;
+
+	for(int id=0;id<SensorN;id++){		
+		packet[id].set_Packet(id,id);		//パケットの生成
+		for(int b=1;b<Sensorb;b++){
+			packet[b*SensorN+id].copy_Packet(b*SensorN+id,id,packet[id].Getbit());	//パケットのコピー
+		}
+	}
 	
+
+	for(int n=0;n<35 ;n++){
+		packet[n].disp();
+	}
 
 
 

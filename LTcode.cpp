@@ -27,8 +27,26 @@ void Packet::set_Packet(int n, int id){
 	nodeNumber = std::vector<int>(SensorN);		//ノード番号
 	nodeNumber[0] = id;				
 	bit_generator(bit);							//ビットシーケンスデータ
-  
 }
+
+//データ部分の配列の先頭アドレスを取ってくる関数
+int* Packet::Getbit(){
+	return bit;
+}
+
+//パケットコピー
+void Packet::copy_Packet(int n, int id,int *p){
+
+	Pid = n;									//パケットid
+	degree = 3;									//次数
+	MixingTime = 3;								//ミキシングタイム
+	nodeNumber = std::vector<int>(SensorN);		//ノード番号
+	nodeNumber[0] = id;				
+	
+	for(int n=0;n<BITN;n++){
+		bit[n] = p[n];							//ビットシーケンスデータのコピー
+	}
+}					
 
 //データシーケンス生成
 void bit_generator(int *bit){

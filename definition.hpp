@@ -54,6 +54,8 @@ class Packet{
 	public:
 		void set_Packet(int Pid, int id);		//id,次数,ミキシングタイム,ノード番号,データ
 		void disp();							//内容を出力するメンバ関数宣言
+		int* Getbit();							//ビットシーケンスデータを取得する関数
+		void copy_Packet(int n, int id,int *p); //パケットの内容をコピーする関数
 };
 
 /***************計算のための関数*******************************/
