@@ -29,14 +29,15 @@ class Sensor{
 		int hop;				// シンクノードまでのホップ数
 		double x;				// x座標
 		double y;				// y座標
+		int bit[BITN];			// ビットシーケンスデータ
 
 	public:
 		double Getx();	//xの取得
 		double Gety();	//yの取得
-		void set_id_location(int id);		//id,x,yを設定する関数
-		void disp();						//内容を出力するメンバ関数宣言
-		void set_Sensor_hop(int hop);			//hopを設定する関数
-		
+		int* Getbit();	//ビット
+		void set_Sensor(int id);			//id,x,y,ビットシーケンスデータを設定する関数
+		void set_Sensor_hop(int hop);	    //hopを設定する関数
+		void disp();						//内容を出力するメンバ関数宣言		
 
 		Sensor():
 			hop(0){}
@@ -49,13 +50,20 @@ class Packet{
 		int degree;						//次数
 		int MixingTime;					//ミキシングタイム
 		std::vector<int> nodeNumber;	//ノード番号
-		int bit[BITN];			//ビットシーケンスデータ
+		int bit[BITN];					//ビットシーケンスデータ
 
 	public:
-		void set_Packet(int Pid, int id);		//id,次数,ミキシングタイム,ノード番号,データ
-		void disp();							//内容を出力するメンバ関数宣言
-		int* Getbit();							//ビットシーケンスデータを取得する関数
-		void copy_Packet(int n, int id,int *p); //パケットの内容をコピーする関数
+		int Getdegree();
+		int GetMix();
+		int* Getbit();								//ビットシーケンスデータを取得する関数
+
+		void set_Packet(int Pid, int id, int *p);	//id,次数,ミキシングタイム,ノード番号,データ
+		void copy_Packet(int n, int id, int *p);	//パケットの内容をコピーする関数
+		int Getnowid();	
+
+		void disp();								//内容を出力するメンバ関数宣言
+
+	 	std::vector<int> GetnodeNumber();			//nodeNumberの先頭アドレスを返す関数
 };
 
 /***************計算のための関数*******************************/
@@ -71,6 +79,8 @@ void set_hop(std::vector<std::vector<int> > &array2D, std::vector<int> &hop_chec
 
 void bit_generator(int *bit);		//ビット生成
 int transition_id(int id, std::vector<std::vector<int> > &array2D);						//遷移先idを決定する関数ゆ
+void transmitter_to_receiver(int *transmitted_bit, int *received_bit);
+int bed(int *tbit, int *rbit);
 
 /***********************transmitter******************************/
 void transmitter(int (*bit), double (*signal)[2]);

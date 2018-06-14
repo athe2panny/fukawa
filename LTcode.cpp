@@ -1,6 +1,24 @@
 //LT符号化に伴うパケットのノード間移動について定義する
 #include "definition.hpp"
 
+//データ部分の配列の先頭アドレスを取ってくる関数
+int* Packet::Getbit(){
+	return bit;
+}
+
+int Packet::Getdegree(){
+	return degree;
+}
+
+int Packet::GetMix(){
+	return MixingTime;
+}
+
+int Packet::Getnowid(){
+	int& now_id = nodeNumber.back();
+	return now_id;
+}
+
 //パケットの内容を表示する関数
 void Packet::disp(){
 	std::cout << "パケットID:" << Pid << std::endl;
@@ -19,19 +37,22 @@ void Packet::disp(){
 }
 
 //パケット生成
-void Packet::set_Packet(int n, int id){
+void Packet::set_Packet(int n, int id, int *p){
 
 	Pid = n;									//パケットid
 	degree = 3;									//次数
 	MixingTime = 3;								//ミキシングタイム
-	nodeNumber = std::vector<int>(SensorN);		//ノード番号
+	nodeNumber = std::vector<int>(1);			//ノード番号
 	nodeNumber[0] = id;				
-	bit_generator(bit);							//ビットシーケンスデータ
+	for(int n=0;n<BITN;n++){
+		bit[n] = p[n];							//ビットシーケンスデータのコピー
+	}
 }
 
-//データ部分の配列の先頭アドレスを取ってくる関数
-int* Packet::Getbit(){
-	return bit;
+
+
+std::vector<int> Packet::GetnodeNumber(){
+	return nodeNumber;
 }
 
 //パケットコピー
@@ -48,19 +69,6 @@ void Packet::copy_Packet(int n, int id,int *p){
 	}
 }					
 
-//データシーケンス生成
-void bit_generator(int *bit){
-	
-	std::random_device rnd;     						// 非決定的な乱数生成器
-    std::mt19937_64 mt(rnd());							// 乱数生成
-    std::uniform_int_distribution<> rand2(0, 1);		// [0, 1] 範囲の一様乱数
-	int n;
-
-	for(n=0; n<BITN; n++){
-    	bit[n] = rand2(mt);	
-	}
-
-}
 
 //次数決定
 
@@ -113,6 +121,21 @@ void transmitter_to_receiver(int *transmitted_bit, int *received_bit){
 	transmitter(transmitted_bit, transmitted_signal);
 	awgn(transmitted_signal, received_signal);
 	receiver(received_signal, received_bit);
+}
+
+//誤り検出する関数
+//引数：送信ビット，受信ビット 出力：誤りがある場合=>1 誤りがない場合=>0
+int bed(int *tbit, int *rbit){
+
+	int error = 0;		//エラーありの場合:1 なし:0
+
+	for(int n=0;n<BITN;n++){
+		if(tbit[n] != rbit[n]){
+			error = 1;
+			break;
+		}
+	}
+	return error;
 }
 
 

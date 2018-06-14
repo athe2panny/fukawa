@@ -16,8 +16,27 @@ double Sensor::Gety(){
 	return y;
 }
 
+//データ部分の配列の先頭アドレスを取ってくる関数
+int* Sensor::Getbit(){
+	return bit;
+}
+
+
+//データシーケンス生成
+void bit_generator(int *bit){
+	
+	std::random_device rnd;     						// 非決定的な乱数生成器
+    std::mt19937_64 mt(rnd());							// 乱数生成
+    std::uniform_int_distribution<> rand2(0, 1);		// [0, 1] 範囲の一様乱数
+	int n;
+
+	for(n=0; n<BITN; n++){
+    	bit[n] = rand2(mt);	
+	}
+}
+
 /*ノードを1*1エリアにばらまく関数*/
-void Sensor::set_id_location(int n){
+void Sensor::set_Sensor(int n){
 
 	std::random_device rnd;     						// 非決定的な乱数生成器
     std::mt19937_64 mt(rnd());							//乱数生成
@@ -31,7 +50,8 @@ void Sensor::set_id_location(int n){
 		x = rand1(mt);
 		y = rand1(mt);
 	}
-	
+
+	bit_generator(bit);									//ビット生成
 }
 
 /*ホップ数を設定する関数*/

@@ -11,7 +11,7 @@ int main(void){
 	hop_check = std::vector<int>(SensorN);
 
 	for (int i = 0; i < SensorN; i++){
-		sensor[i].set_id_location(i);	//Sensor の id,x,yの設定
+		sensor[i].set_Sensor(i);	//Sensor の id,x,yの設定
 		// sensor[i].disp();
 	}
 	
@@ -36,16 +36,67 @@ int main(void){
 	// std::cout << transition_id(now_id, array2D) << std::endl;
 
 	for(int id=0;id<SensorN;id++){		
-		packet[id].set_Packet(id,id);		//パケットの生成
+		packet[id].set_Packet(id,id,sensor[id].Getbit());		//パケットの生成
 		for(int b=1;b<Sensorb;b++){
 			packet[b*SensorN+id].copy_Packet(b*SensorN+id,id,packet[id].Getbit());	//パケットのコピー
 		}
 	}
 	
-
+	//生成したパケットの表示
 	for(int n=0;n<35 ;n++){
 		packet[n].disp();
 	}
+
+
+	int end = 1;			//一つのパケットに対する送信の終わりを示すフラグ 終了時end=0
+	int now_id;				//現在いるノード番号を保持する変数
+	int transition = 0;		//遷移先idを保持する変数
+	int tmp_bit[BITN];		//受信bitを保持する配列
+
+	int* pdata, *ndata;		//パケットデータとノードデータの先頭ポインタを保持する関数
+
+	//パケットの送受信
+	for(int pid = 0;pid<Sensorb*SensorN;pid++){										//全パケットのループ
+
+		now_id = packet[pid].Getnowid();											//現在いるノードidの初期化
+
+		for(int degree = 0;degree<packet[pid].Getdegree();degree++){				//次数が0になるまで
+			for(int mix = 0;mix<packet[pid].GetMix();mix++){						//ミキシングタイムが0になるまで
+
+				now_id = transition_id(now_id, array2D);						//遷移先ノードの決定
+				transmitter_to_receiver(packet[pid].Getbit(), tmp_bit);			//ノード間送受信
+				end = bed(packet[pid].Getbit(), tmp_bit);						//誤り検出
+				if(end == 1)	break;											//破棄判定
+			}
+				if(end == 1)	break;																
+																				//パケットのノード番号,データを更新
+				packet[pid].GetnodeNumber().push_back(now_id);					//ノード番号の追加
+				
+				pdata = packet[pid].Getbit();
+				ndata = sensor[now_id].Getbit();
+				
+				for(int n=0;n<BITN;n++){
+					pdata[n] = (pdata[n] + ndata[n]) % 2;						//データの排他的論理和
+				}
+			}
+		
+		while(end != 1){
+			
+			now_id = transition_id(now_id, array2D);						//遷移先ノードの決定
+			transmitter_to_receiver(packet[pid].Getbit(), tmp_bit);			//ノード間送受信
+			end = bed(packet[pid].Getbit(), tmp_bit);						//誤り検出
+		
+			if(now_id == 0){
+				end = 1;														//シンク，センサノード判定}
+			}																		
+		}
+
+
+
+	}
+
+
+
 
 
 
