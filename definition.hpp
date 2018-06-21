@@ -64,7 +64,7 @@ class Packet{
 		int Getnowid();	
 
 		void disp();								//内容を出力するメンバ関数宣言
-
+		void pushnodeNumber(int now_id);			//ノード番号を末尾に追加する関数
 	 	std::vector<int> GetnodeNumber();			//nodeNumberの先頭アドレスを返す関数
 };
 

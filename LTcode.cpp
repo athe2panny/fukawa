@@ -14,6 +14,16 @@ int Packet::GetMix(){
 	return MixingTime;
 }
 
+//ノード番号を取得する関数
+std::vector<int> Packet::GetnodeNumber(){
+	return nodeNumber;
+}
+
+//ノード番号を末尾に追加する関数
+void Packet::pushnodeNumber(int now_id){
+	nodeNumber.push_back(now_id);
+}
+
 int Packet::Getnowid(){
 	int& now_id = nodeNumber.back();
 	return now_id;
@@ -42,8 +52,7 @@ void Packet::set_Packet(int n, int id, int *p){
 	Pid = n;									//パケットid
 	degree = 3;									//次数
 	MixingTime = 3;								//ミキシングタイム
-	nodeNumber = std::vector<int>(1);			//ノード番号
-	nodeNumber[0] = id;				
+	nodeNumber.push_back(id);					//ノード番号の追加		
 	for(int n=0;n<BITN;n++){
 		bit[n] = p[n];							//ビットシーケンスデータのコピー
 	}
@@ -51,9 +60,6 @@ void Packet::set_Packet(int n, int id, int *p){
 
 
 
-std::vector<int> Packet::GetnodeNumber(){
-	return nodeNumber;
-}
 
 //パケットコピー
 void Packet::copy_Packet(int n, int id,int *p){
