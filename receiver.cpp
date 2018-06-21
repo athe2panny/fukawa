@@ -2,11 +2,7 @@
 
 void receiver(double (*signal)[2], int (*bit)){
 
-#ifdef DIFF
-	QPSK_demodulator_dd(signal, bit);
-#else
 	QPSK_demodulator_cd(signal, bit);
-#endif
 
 }
 

@@ -19,10 +19,10 @@ int main(void){
 
 	set_hop(array2D, hop_check, sensor);	//Sensor の hopの設定
 
-	for (int i = 0; i < SensorN; i++){
-		// sensor[i].set_id_location(i);
-		sensor[i].disp();				//Sensorの中身の表示
-	}
+	// for (int i = 0; i < SensorN; i++){
+	// 	// sensor[i].set_id_location(i);
+	// 	sensor[i].disp();				//Sensorの中身の表示
+	// }
 
 	// //隣接行列の表示
 	// for(int k=0; k<SensorN; k++){
@@ -60,7 +60,7 @@ int main(void){
 	int *pdata, *ndata;		//パケットデータとノードデータの先頭ポインタを保持する関数
 
 	//パケットの送受信
-	for(int pid = 0;pid<Sensorb*SensorN;pid++){										//全パケットのループ
+	for(int pid = 0;pid<1;pid++){										//全パケットのループ
 
 		now_id = packet[pid].Getnowid();											//現在いるノードidの初期化
 
@@ -68,7 +68,20 @@ int main(void){
 				for(int mix = 0;mix<packet[pid].GetMix();mix++){						//ミキシングタイムが0になるまで
 
 					now_id = transition_id(now_id, array2D);						//遷移先ノードの決定
+					std::cout << now_id << '\n' << std::endl;
 					transmitter_to_receiver(packet[pid].Getbit(), received_bit);	//ノード間送受信
+
+						for(int n=0;n<BITN;n++){
+							std::cout << packet[pid].Getbit()[n] << ' ';
+						}
+						std::cout << '\n' << std::endl;
+
+						for(int n=0;n<BITN;n++){
+							std::cout << received_bit[n] << ' ';
+						}
+						std::cout << '\n' << std::endl;
+
+
 					end = bed(packet[pid].Getbit(), received_bit);					//誤り検出
 					if(end == 1){
 						break;	//誤りあり
@@ -104,7 +117,7 @@ int main(void){
 			}
 		}
 
-	for(int n=0;n<35 ;n++){
+	for(int n=0;n<1 ;n++){
 		packet[n].disp();
 	}
 	
