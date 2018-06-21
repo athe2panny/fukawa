@@ -46,11 +46,24 @@ void Packet::disp(){
 	std::cout << '\n' << std::endl; 
 }
 
+
+//次数を決定する関数
+int degree_init(){
+	//とりあえずランダムに選ぶ
+	int max_degree = 5;
+
+	std::random_device rnd;     										// 非決定的な乱数生成器
+    std::mt19937_64 mt(rnd());											// 乱数生成
+    std::uniform_int_distribution<> rand4(0, max_degree);				// [0, 最大次数] 範囲の一様乱数
+
+    return rand4(mt);
+}
+
 //パケット生成
 void Packet::set_Packet(int n, int id, int *p){
 
 	Pid = n;									//パケットid
-	degree = 3;									//次数
+	degree = degree_init();									//次数
 	MixingTime = 3;								//ミキシングタイム
 	nodeNumber.push_back(id);					//ノード番号の追加		
 	for(int n=0;n<BITN;n++){
@@ -65,10 +78,9 @@ void Packet::set_Packet(int n, int id, int *p){
 void Packet::copy_Packet(int n, int id,int *p){
 
 	Pid = n;									//パケットid
-	degree = 3;									//次数
+	degree = degree_init();									//次数
 	MixingTime = 3;								//ミキシングタイム
-	nodeNumber = std::vector<int>(SensorN);		//ノード番号
-	nodeNumber[0] = id;				
+	nodeNumber.push_back(id);					//ノード番号の追加	
 	
 	for(int n=0;n<BITN;n++){
 		bit[n] = p[n];							//ビットシーケンスデータのコピー
@@ -96,7 +108,7 @@ int transition_id(int now_id, std::vector<std::vector<int> > &array2D){
 		}
 	}
 
-
+//とりあえずランダムに選ぶ
 	std::random_device rnd;     										// 非決定的な乱数生成器
     std::mt19937_64 mt(rnd());											// 乱数生成
     std::uniform_int_distribution<> rand3(0, count_adjacent_node);		// [0, 隣接ノード数] 範囲の一様乱数
@@ -145,10 +157,51 @@ int bed(int *tbit, int *rbit){
 }
 
 
-//パケット更新
-//引数:パケット，現在のノードID 出力:なし
 
-//センサノード
 
-//シンクノードに到着
+// void degree_init()
+// {
+// 	int i,j,k;
+// 	double tmp;
+// 	double R;
+// 	double beta;
+// 	double rho[SensorN],tau[SensorN];
+// 	double myu_t[SensorN];
+
+
+
+	
+// 	//Robust Soliton Distribution
+// 	rho[0] = 1.0 / (double)SensorN;
+// 	for(i=1;i<SensorN;i++){
+// 		tmp = (double) (i+1) * ( (i+1) - 1 );
+// 		rho[i] = 1.0 / tmp;
+// 	}
+
+// 	for(i=0;i<SensorN;i++) tau[i] = 0;
+// 	R = LT_c * log((double)SensorN / LT_delta) * sqrt((double)SensorN);
+
+// 	for(i=0;i<(int) ((double)(SensorN)/(R) - 1) ; i++){
+// 		if(i == SensorN) break;
+// 		tau[i] = R / ( (double)(i+1.0)*(double)SensorN );
+// 	}
+// 	if((int)((double)SensorN / R) < SensorN) {
+// 		tau[(int)((double)SensorN/R)-1] = R * log(R/(double)LT_delta) / (double)SensorN;
+// 	}
+
+// 	beta=0;
+// 	for(i=0;i<SensorN;i++){
+// 		beta += rho[i] + tau[i];
+// 	}
+
+
+// 	for(i=0;i<SensorN;i++){
+// 		myu_t[i] = (rho[i] + tau[i]) / beta;
+// 		myu[i] = (rho[i] + tau[i]) / beta;
+// 	}
+
+// 	for(i=1;i<SensorN;i++){
+// 		myu[i] += myu[i-1];
+// 	}
+// }
 

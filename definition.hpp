@@ -83,6 +83,7 @@ void bit_generator(int *bit);															//ビット生成
 int transition_id(int id, std::vector<std::vector<int> > &array2D);						//遷移先idを決定する関数
 void transmitter_to_receiver(int *transmitted_bit, int *received_bit);					//送信機>通信路>受信機の部分をまとめた関数
 int bed(int *tbit, int *rbit);															//bit error detection 誤り検出　出力:0or1
+int degree_init();																		//次数の設定を行う関数
 
 /***********************transmitter******************************/
 void transmitter(int (*bit), double (*signal)[2]);
