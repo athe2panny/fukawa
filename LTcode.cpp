@@ -35,7 +35,7 @@ void Packet::disp(){
 	std::cout << "次数:" << degree << std::endl;
 	std::cout << "ミキシングタイム:" << MixingTime << std::endl;
 	std::cout << "ノード番号:" ;
-	for(int n=0;n<SensorN;n++){
+	for(int n=0;n<nodeNumber.size();n++){
 		std::cout << nodeNumber[n] << ' ';
 	}
 	std::cout << std::endl; 

@@ -60,7 +60,7 @@ int main(void){
 	int *pdata, *ndata;		//パケットデータとノードデータの先頭ポインタを保持する関数
 
 	//パケットの送受信
-	for(int pid = 3;pid<4;pid++){										//全パケットのループ
+	for(int pid = 0;pid<SensorN*Sensorb;pid++){										//全パケットのループ
 
 		now_id = packet[pid].Getnowid();											//現在いるノードidの初期化
 
@@ -68,20 +68,7 @@ int main(void){
 				for(int mix = 0;mix<packet[pid].GetMix();mix++){						//ミキシングタイムが0になるまで
 
 					now_id = transition_id(now_id, array2D);						//遷移先ノードの決定
-					std::cout << now_id << '\n' << std::endl;
 					transmitter_to_receiver(packet[pid].Getbit(), received_bit);	//ノード間送受信
-
-						for(int n=0;n<BITN;n++){
-							std::cout << packet[pid].Getbit()[n] << ' ';
-						}
-						std::cout << '\n' << std::endl;
-
-						for(int n=0;n<BITN;n++){
-							std::cout << received_bit[n] << ' ';
-						}
-						std::cout << '\n' << std::endl;
-
-
 					end = bed(packet[pid].Getbit(), received_bit);					//誤り検出
 					if(end == 1){
 						break;	//誤りあり
@@ -96,14 +83,13 @@ int main(void){
 				//パケットのノード番号追加,データの合成
 				packet[pid].pushnodeNumber(now_id);					//ノード番号の追加
 
+				//ノード番号領域の中身表示
 				std::vector<int> test = packet[pid].GetnodeNumber();
 				std::size_t size = test.size();
 				for(int i=0;i<size;i++){
 					std::cout << test[i];
 				}
 				std::cout << std::endl;
-				
-  				std::cout << size << std::endl;
 
 				pdata = packet[pid].Getbit();
 				ndata = sensor[now_id].Getbit();
@@ -112,8 +98,6 @@ int main(void){
 					pdata[n] = (pdata[n] + ndata[n]) % 2;						//データの排他的論理和
 				}
 			}
-
-			std::cout << end << ' ' << now_id << std::endl;
 			
 			while(now_id != 0 && end == 0){											//シンクノードに到達するまで
 			
@@ -124,12 +108,10 @@ int main(void){
 				if(end == 1){
 					break;	//誤りあり
 				}
-				std::cout << end << ' ' << now_id << std::endl;
-
 			}
 		}
 
-	for(int n=3;n<4 ;n++){
+	for(int n=0;n<SensorN ;n++){
 		packet[n].disp();
 	}
 	
