@@ -19,7 +19,6 @@ const int BITN = (SYMBOLN*2);
 const int SensorN = 30;		//センサの数
 const int Sensorb = 3;			//センサーのパケット複製数
 const double Sensorr = 0.3;	//センサが通信できる距離
-const int SensorP = 1;			//各センサのパケット数
 const int PacketSize = 80;		//送信パケット長
 
 /**************センサクラスの宣言******************************/
@@ -34,7 +33,7 @@ class Sensor{
 	public:
 		double Getx();	//xの取得
 		double Gety();	//yの取得
-		int* Getbit();	//ビット
+		int* Getbit();	//データの先頭アドレスの取得
 		void set_Sensor(int id);			//id,x,y,ビットシーケンスデータを設定する関数
 		void set_Sensor_hop(int hop);	    //hopを設定する関数
 		void disp();						//内容を出力するメンバ関数宣言		
@@ -57,7 +56,7 @@ class Packet{
 		int GetMix();
 		int* Getbit();								//ビットシーケンスデータを取得する関数
 
-		void set_Packet(int Pid, int id, int *p);	//id,次数,ミキシングタイム,ノード番号,データ
+		void set_Packet(int Pid, int id, int *p);	//id,次数,ミキシングタイム,ノード番号,データを設定する関数
 		void copy_Packet(int n, int id, int *p);	//パケットの内容をコピーする関数
 		int Getnowid();	
 
@@ -72,15 +71,15 @@ double cal_d(double x1, double y1, double x2, double y2);	//2点間距離を導�
 
 /***********************隣接行列******************************/
 
-void make_adjacency_matrix(Sensor *s, std::vector<std::vector<int> > &array2D);		/*隣接行列を作る関数*/
-void set_hop(std::vector<std::vector<int> > &array2D, std::vector<int> &hop_check, Sensor *s);						//隣接行列からホップ数配列を設定する関数
+void make_adjacency_matrix(Sensor *s, std::vector<std::vector<int> > &array2D);						/*隣接行列を作る関数*/
+void set_hop(std::vector<std::vector<int> > &array2D, std::vector<int> &hop_check, Sensor *s);		//隣接行列からホップ数配列を設定する関数
 
 /***********************パケット生成******************************/
 
-void bit_generator(int *bit);		//ビット生成
-int transition_id(int id, std::vector<std::vector<int> > &array2D);						//遷移先idを決定する関数ゆ
-void transmitter_to_receiver(int *transmitted_bit, int *received_bit);
-int bed(int *tbit, int *rbit);
+void bit_generator(int *bit);															//ビット生成
+int transition_id(int id, std::vector<std::vector<int> > &array2D);						//遷移先idを決定する関数
+void transmitter_to_receiver(int *transmitted_bit, int *received_bit);					//送信機>通信路>受信機の部分をまとめた関数
+int bed(int *tbit, int *rbit);															//bit error detection 誤り検出　出力:0or1
 
 /***********************transmitter******************************/
 void transmitter(int (*bit), double (*signal)[2]);
