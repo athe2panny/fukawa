@@ -114,6 +114,8 @@ int main(void){
 	for(int n=0;n<SensorN ;n++){
 		packet[n].disp();
 	}
+
+	decode(packet);
 	
 	return 0;
 }

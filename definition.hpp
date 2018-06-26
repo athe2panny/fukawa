@@ -20,7 +20,7 @@ const double CNR = Eb_N0 + 3.0;
 /**************変数の定義*************************************/
 
 const int SensorN = 30;		//センサの数
-const int Sensorb = 3;			//センサーのパケット複製数
+const int Sensorb = 1;			//センサーのパケット複製数
 const double Sensorr = 0.3;	//センサが通信できる距離
 const int PacketSize = 80;		//送信パケット長
 
@@ -65,7 +65,7 @@ class Packet{
 
 		void disp();								//内容を出力するメンバ関数宣言
 		void pushnodeNumber(int now_id);			//ノード番号を末尾に追加する関数
-	 	std::vector<int> GetnodeNumber();			//nodeNumberの先頭アドレスを返す関数
+	 	std::vector<int>& GetnodeNumber();			//nodeNumberの先頭アドレスを返す関数
 };
 
 /***************計算のための関数*******************************/
@@ -102,6 +102,11 @@ void QPSK_demodulator_cd(double (*signal)[2], int (*bit));
 /*************************ber********************************/
 void ber(int loop, int (*tbit), int (*rbit));
 
+/*************************decoder********************************/
+void decode(Packet *packet);
+int vector_finder(std::vector<int> vec, int number);
+void decoded_packet(Packet *packet, std::vector<int> &decp);
+void decoding(Packet *packet, std::vector<int> &decp);
 
 
 

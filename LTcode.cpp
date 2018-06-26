@@ -15,7 +15,7 @@ int Packet::GetMix(){
 }
 
 //ノード番号を取得する関数
-std::vector<int> Packet::GetnodeNumber(){
+std::vector<int>& Packet::GetnodeNumber(){
 	return nodeNumber;
 }
 
@@ -50,7 +50,7 @@ void Packet::disp(){
 //次数を決定する関数
 int degree_init(){
 	//とりあえずランダムに選ぶ
-	int max_degree = 5;
+	int max_degree = 3;
 
 	std::random_device rnd;     										// 非決定的な乱数生成器
     std::mt19937_64 mt(rnd());											// 乱数生成
@@ -113,18 +113,21 @@ int transition_id(int now_id, std::vector<std::vector<int> > &array2D){
     std::mt19937_64 mt(rnd());											// 乱数生成
     std::uniform_int_distribution<> rand3(0, count_adjacent_node);		// [0, 隣接ノード数] 範囲の一様乱数
 
-    int next_adjacent_node = rand3(mt);
+    int next_adjacent_node;
     int next_id;
 
-    for(int j=0;j<SensorN;j++){
-    	if(array2D[now_id][j] == 1){
-    		next_adjacent_node--;
-    		if(next_adjacent_node == 0){
-    			next_id = j;
-    			break;
+    do{
+	    next_adjacent_node = rand3(mt);
+    	for(int j=0;j<SensorN;j++){
+    		if(array2D[now_id][j] == 1){
+    			next_adjacent_node--;
+    			if(next_adjacent_node == 0){					
+    				next_id = j;
+    				break;
+    			}
     		}
     	}
-    }
+    }while(now_id == next_id);											//自分自身のノードには遷移しないようにする
 
     return next_id;
 
