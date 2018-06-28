@@ -53,23 +53,23 @@ void Packet::disp(){
 }
 
 
-//次数を決定する関数
-int degree_init(){
-	//とりあえずランダムに選ぶ
-	int max_degree = 3;
+// //次数を決定する関数
+// int degree_init(){
+// 	//とりあえずランダムに選ぶ
+// 	int max_degree = 3;
 
-	std::random_device rnd;     										// 非決定的な乱数生成器
-    std::mt19937_64 mt(rnd());											// 乱数生成
-    std::uniform_int_distribution<> rand4(0, max_degree);				// [0, 最大次数] 範囲の一様乱数
+// 	std::random_device rnd;     										// 非決定的な乱数生成器
+//     std::mt19937_64 mt(rnd());											// 乱数生成
+//     std::uniform_int_distribution<> rand4(0, max_degree);				// [0, 最大次数] 範囲の一様乱数
 
-    return rand4(mt);
-}
+//     return rand4(mt);
+// }
 
 //パケット生成
 void Packet::set_Packet(int n, int id, int *p){
 
 	Pid = n;									//パケットid
-	degree = degree_init();									//次数
+	degree = degree_init(deg);					//次数
 	MixingTime = 3;								//ミキシングタイム
 	nodeNumber.push_back(id);					//ノード番号の追加		
 	for(int n=0;n<BITN;n++){
@@ -84,7 +84,7 @@ void Packet::set_Packet(int n, int id, int *p){
 void Packet::copy_Packet(int n, int id,int *p){
 
 	Pid = n;									//パケットid
-	degree = degree_init();									//次数
+	degree = degree_init(deg);									//次数
 	MixingTime = 3;								//ミキシングタイム
 	nodeNumber.push_back(id);					//ノード番号の追加	
 	

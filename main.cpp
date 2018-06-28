@@ -58,7 +58,7 @@ int main(void){
 
 		now_id = packet[pid].Getnowid();											//現在いるノードidの初期化
 
-			for(int degree = 0;degree<packet[pid].Getdegree();degree++){				//次数が0になるまで
+			for(int degree = 1;degree<packet[pid].Getdegree();degree++){				//次数が0になるまで
 				for(int mix = 0;mix<packet[pid].GetMix();mix++){						//ミキシングタイムが0になるまで
 
 					now_id = transition_id(now_id, array2D);						//遷移先ノードの決定
