@@ -29,12 +29,18 @@ int Packet::Getnowid(){
 	return now_id;
 }
 
+void Packet::set_at_sink(){
+	at_sink = 1;
+}
+
 //パケットの内容を表示する関数
 void Packet::disp(){
+
+	std::cout << "シンクノード到達" << at_sink << std::endl;
 	std::cout << "パケットID:" << Pid << std::endl;
 	std::cout << "次数:" << degree << std::endl;
 	std::cout << "ミキシングタイム:" << MixingTime << std::endl;
-	std::cout << "ノード番号:" ;
+	std::cout << "ノード番号:";
 	for(int n=0;n<nodeNumber.size();n++){
 		std::cout << nodeNumber[n] << ' ';
 	}
@@ -135,13 +141,15 @@ int transition_id(int now_id, std::vector<std::vector<int> > &array2D){
 
 //引数:ビットシーケンス 出力:ビットシーケンス 
 //ビットシーケンスから通信路を通した時のビットシーケンスを返す関数
-void transmitter_to_receiver(int *transmitted_bit, int *received_bit){
+//ついでにhop数もカウントする
+void transmitter_to_receiver(int& hop_count, int *transmitted_bit, int *received_bit){
 
 	double transmitted_signal[SYMBOLN][2], received_signal[SYMBOLN][2];
 
 	transmitter(transmitted_bit, transmitted_signal);
 	awgn(transmitted_signal, received_signal);
 	receiver(received_signal, received_bit);
+	hop_count++;	//ホップ数カウント
 }
 
 //誤り検出する関数
@@ -160,51 +168,4 @@ int bed(int *tbit, int *rbit){
 }
 
 
-
-
-// void degree_init()
-// {
-// 	int i,j,k;
-// 	double tmp;
-// 	double R;
-// 	double beta;
-// 	double rho[SensorN],tau[SensorN];
-// 	double myu_t[SensorN];
-
-
-
-	
-// 	//Robust Soliton Distribution
-// 	rho[0] = 1.0 / (double)SensorN;
-// 	for(i=1;i<SensorN;i++){
-// 		tmp = (double) (i+1) * ( (i+1) - 1 );
-// 		rho[i] = 1.0 / tmp;
-// 	}
-
-// 	for(i=0;i<SensorN;i++) tau[i] = 0;
-// 	R = LT_c * log((double)SensorN / LT_delta) * sqrt((double)SensorN);
-
-// 	for(i=0;i<(int) ((double)(SensorN)/(R) - 1) ; i++){
-// 		if(i == SensorN) break;
-// 		tau[i] = R / ( (double)(i+1.0)*(double)SensorN );
-// 	}
-// 	if((int)((double)SensorN / R) < SensorN) {
-// 		tau[(int)((double)SensorN/R)-1] = R * log(R/(double)LT_delta) / (double)SensorN;
-// 	}
-
-// 	beta=0;
-// 	for(i=0;i<SensorN;i++){
-// 		beta += rho[i] + tau[i];
-// 	}
-
-
-// 	for(i=0;i<SensorN;i++){
-// 		myu_t[i] = (rho[i] + tau[i]) / beta;
-// 		myu[i] = (rho[i] + tau[i]) / beta;
-// 	}
-
-// 	for(i=1;i<SensorN;i++){
-// 		myu[i] += myu[i-1];
-// 	}
-// }
 

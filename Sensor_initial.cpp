@@ -98,8 +98,8 @@ void set_hop(std::vector<std::vector<int> > &array2D, std::vector<int> &hop_chec
 		for(int i=0;i<SensorN;i++){
 			if(hop_check[i] == hierarchy){			//階層ごとに隣接ノードの探索
 
-				for(int j=0;j<SensorN;j++){
-					if(array2D[i][j] == 1 && hop_check[j] == 0 && j != 0){	//hierarchyが登録されていない隣接ノードを対象
+				for(int j=1;j<SensorN;j++){
+					if(array2D[i][j] == 1 && hop_check[j] == 0){	//hierarchyが登録されていない隣接ノードを対象
 						hop_check[j] = hierarchy + 1;
 						count++;
 					}

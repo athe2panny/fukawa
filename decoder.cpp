@@ -45,10 +45,10 @@ void decoding(Packet *packet, std::vector<int> &decp){
 					}
 
 					node.erase(node.begin() + i);				//ノード番号領域から加算したパケットを除く
-						for(int n = 0;n<node.size();n++){
-							std::cout << node[n] << ' ';
-						}
-						std::cout <<std::endl;
+						// for(int n = 0;n<node.size();n++){
+						// 	std::cout << node[n] << ' ';
+						// }
+						// std::cout <<std::endl;
 				}
 			}
 		}
