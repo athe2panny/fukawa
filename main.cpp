@@ -29,14 +29,15 @@ int main(void){
 	int *pdata, *ndata;		//パケットデータとノードデータの先頭ポインタを保持する関数
 
 /****************************************************************************************************/	
+	do{							
+		for (int i = 0; i < SensorN; i++){
+			sensor[i].set_Sensor(i);				//Sensor の id,x,yの設定
+		}
 
-	for (int i = 0; i < SensorN; i++){
-		sensor[i].set_Sensor(i);	//Sensor の id,x,yの設定
-	}
-	
-	make_adjacency_matrix(sensor, array2D);	//隣接行列の作成
+		make_adjacency_matrix(sensor, array2D);		//隣接行列の作成
+	}while(check(array2D));							//ネットワークが閉じているか検査
 
-	set_hop(array2D, hop_check, sensor);	//Sensor の hopの設定
+	set_hop(array2D, hop_check, sensor);			//Sensor の hopの設定
 
 	// //隣接行列の表示
 	// for(int k=0; k<SensorN; k++){
@@ -66,13 +67,11 @@ int main(void){
 					error = bed(packet[pid].Getbit(), received_bit);
 					if(error == 1){break;}
 				}
-				std::cout << "せぐふぉ" << std::endl;
 				
 				if(error == 1){break;}
 
 				//パケットのノード番号追加,データの合成
 				packet[pid].pushnodeNumber(now_id);					//ノード番号の追加
-
 				// //ノード番号領域の中身表示
 				// std::vector<int> test = packet[pid].GetnodeNumber();
 				// std::size_t size = test.size();

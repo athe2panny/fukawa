@@ -33,6 +33,10 @@ void Packet::set_at_sink(){
 	at_sink = 1;
 }
 
+int Packet::Getat_sink(){
+	return at_sink;
+}
+
 //パケットの内容を表示する関数
 void Packet::disp(){
 
