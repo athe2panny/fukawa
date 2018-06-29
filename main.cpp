@@ -15,28 +15,31 @@ int main(void){
 	int hop_count = 0;							//合計ホップ数を管理するカウンタ
 	int decpn = 0;								//復号済みパケットの総数
 
-	array2D = std::vector<std::vector<int> >(SensorN, std::vector<int>(SensorN));	//隣接行列の初期化
-	hop_check = std::vector<int>(SensorN);
-
 	//フラグ関連
 	int mix;		//ミキシングタイムを管理する変数
 	int degree; 	//次数を管理する変数
 	int error; 		//エラー
 	
 	//送受信関連の変数
-	int now_id;				//現在いるノード番号を保持する変数
+	// int now_id;				//現在いるノード番号を保持する変数
 	int transition = 0;		//遷移先idを保持する変数
-	int received_bit[BITN];		//受信bitを保持する配列
+	// int received_bit[BITN];		//受信bitを保持する配列
 
 	int *pdata, *ndata;		//パケットデータとノードデータの先頭ポインタを保持する関数
 
 /****************************************************************************************************/	
 	
-for(Eb_N0=9; Eb_N0<=11; Eb_N0++) {
+for(Eb_N0=7; Eb_N0<=11; Eb_N0++) {
 		CNR = (double)Eb_N0 + 3.0;
 
 		for(loop=0; loop<LOOPN; loop++) {
+	array2D = std::vector<std::vector<int> >(SensorN, std::vector<int>(SensorN));	//隣接行列の初期化
+	hop_check = std::vector<int>(SensorN);
+	Sensor sensor[SensorN];						//SensorN個のSensorの生成
+	Packet packet[SensorN*Sensorb];				//Packetの生成
 
+	hop_count = 0;							//合計ホップ数を管理するカウンタ
+	decpn = 0;								//復号済みパケットの総数
 /******************************シミュレーションループ内**************************************************/
 	do{							
 		for (int i = 0; i < SensorN; i++){
@@ -55,6 +58,7 @@ for(Eb_N0=9; Eb_N0<=11; Eb_N0++) {
 	// 	}
 	// 	std::cout << std::endl;
 	// }
+	// std::cout << std::endl;
 
 	for(int id=0;id<SensorN;id++){		
 		packet[id].set_Packet(id,id,sensor[id].Getbit());		//パケットの生成
@@ -62,13 +66,17 @@ for(Eb_N0=9; Eb_N0<=11; Eb_N0++) {
 			packet[b*SensorN+id].copy_Packet(b*SensorN+id,id,packet[id].Getbit());	//パケットのコピー
 		}
 	}
-	
+	// for(int n=0;n<SensorN;n++){
+	// 	packet[n].disp();
+	// }
+
 	//パケットの送受信
 	for(int pid = 0;pid<SensorN*Sensorb;pid++){										//全パケットのループ
 
-		now_id = packet[pid].Getnowid();											//現在いるノードidの初期化
+		int now_id = packet[pid].Getnowid();											//現在いるノードidの初期化
+		int received_bit[BITN];		//受信bitを保持する配列
 
-			for(int degree = 1;degree<packet[pid].Getdegree();degree++){				//次数が0になるまで
+			for(int degree = 1;degree<packet[pid].Getdegree();degree++){				//次数が1になるまで
 				for(int mix = 0;mix<packet[pid].GetMix();mix++){						//ミキシングタイムが0になるまで
 
 					now_id = transition_id(now_id, array2D);						//遷移先ノードの決定
@@ -110,12 +118,8 @@ for(Eb_N0=9; Eb_N0<=11; Eb_N0++) {
 			}
 		}
 
-	// for(int n=0;n<SensorN;n++){
-	// 	packet[n].disp();
-	// }
-
 	decode(packet, decpn);
-	// make_graph(loop, decpn, hop_count);
+	make_graph(loop, decpn, hop_count);
 /******************************シミュレーションループ内**************************************************/
 	}
 }

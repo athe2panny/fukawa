@@ -4,7 +4,7 @@
 #include <vector>
 #include <cmath>
 
-/**************変数の定義(transmitter,noise,receiver関連)*************************************/
+/**************変数の定義*************************************/
 
 #define sqr(x) ((x)*(x))
 const double PI = 3.141592654;	/* acos(-1.0) */
@@ -14,6 +14,14 @@ const double Ts = (1.0/SYMBOL_RATE);
 const int SYMBOLN = 64;
 const int BITN = (SYMBOLN*2);
 
+const int SensorN = 30;			//センサの数
+const int Sensorb = 1;			//センサーのパケット複製数
+const double Sensorr = 0.3;		//センサが通信できる距離
+const int PacketSize = 80;		//送信パケット長
+const double delta = 0.01;		//LT符号誤り率delta
+const int M = 1;				//Robast Soliton distribution M
+const int deg = 2;				//次数を決定する番号
+
 /**************結果データ関連*************************************/
 
 const int LOOPN = 10;							//ループ回数
@@ -21,15 +29,7 @@ const int LOOPN = 10;							//ループ回数
 #define FILENAME2	"./data/Eb_N0_HOP.dat"		//出力ファイル名
 #define FILENAME3	"./data/MIXT_PER.dat"		//出力ファイル名
 #define FILENAME4	"./data/MIXT_HOP.dat"		//出力ファイル名
-/**************変数の定義*************************************/
 
-const int SensorN = 50;			//センサの数
-const int Sensorb = 1;			//センサーのパケット複製数
-const double Sensorr = 0.3;		//センサが通信できる距離
-const int PacketSize = 80;		//送信パケット長
-const double delta = 0.01;		//LT符号誤り率delta
-const int M = 1;				//Robast Soliton distribution M
-const int deg = 2;				//次数を決定する番号
 /**************センサクラスの宣言******************************/
 class Sensor{
 	private:
@@ -66,6 +66,7 @@ class Packet{
 		int GetMix();
 		int* Getbit();								//ビットシーケンスデータを取得する関数
 		int Getat_sink();
+	 	std::vector<int>& GetnodeNumber();			//nodeNumberの先頭アドレスを返す関数
 
 		void set_Packet(int Pid, int id, int *p);	//id,次数,ミキシングタイム,ノード番号,データを設定する関数
 		void copy_Packet(int n, int id, int *p);	//パケットの内容をコピーする関数
@@ -74,7 +75,6 @@ class Packet{
 
 		void disp();								//内容を出力するメンバ関数宣言
 		void pushnodeNumber(int now_id);			//ノード番号を末尾に追加する関数
-	 	std::vector<int>& GetnodeNumber();			//nodeNumberの先頭アドレスを返す関数
 };
 
 

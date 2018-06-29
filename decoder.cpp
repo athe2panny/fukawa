@@ -65,10 +65,10 @@ void decode(Packet *packet, int decpn){
 		now = decp.size();	
 		decoded_packet(packet, decp);
 
-		for(int i=0;i<decp.size();i++){
-			std::cout << decp[i] << ' ';
-		}
-		std::cout << std::endl;
+		// for(int i=0;i<decp.size();i++){
+		// 	std::cout << decp[i] << ' ';
+		// }
+		// std::cout << std::endl;
 
 		decoding(packet, decp);
 		next = decp.size();
