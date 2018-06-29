@@ -1,6 +1,6 @@
 #include "definition.hpp"
 
-// extern double CNR;
+extern double CNR;
 
 void awgn(double (*transmitted_signal)[2], double (*received_signal)[2]){
 	int n;

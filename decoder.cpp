@@ -56,7 +56,7 @@ void decoding(Packet *packet, std::vector<int> &decp){
 	}
 }
 
-void decode(Packet *packet){
+void decode(Packet *packet, int decpn){
 
 	std::vector<int> decp;
 	size_t now,next;
@@ -73,8 +73,8 @@ void decode(Packet *packet){
 		decoding(packet, decp);
 		next = decp.size();
 	}while(now != next);				//新しく復号されなければ終了
-	
-	
+
+	decpn = (int) now;	
 }
 
 						

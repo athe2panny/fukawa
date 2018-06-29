@@ -1,5 +1,6 @@
 #include "definition.hpp"
 
+double CNR;
 
 int main(void){
 
@@ -12,6 +13,7 @@ int main(void){
 	std::vector<int> hop_check;					//シンクノードまでのホップ数を管理するvector
 	Packet packet[SensorN*Sensorb];				//Packetの生成
 	int hop_count = 0;							//合計ホップ数を管理するカウンタ
+	int decpn = 0;								//復号済みパケットの総数
 
 	array2D = std::vector<std::vector<int> >(SensorN, std::vector<int>(SensorN));	//隣接行列の初期化
 	hop_check = std::vector<int>(SensorN);
@@ -29,6 +31,13 @@ int main(void){
 	int *pdata, *ndata;		//パケットデータとノードデータの先頭ポインタを保持する関数
 
 /****************************************************************************************************/	
+	
+for(Eb_N0=9; Eb_N0<=11; Eb_N0++) {
+		CNR = (double)Eb_N0 + 3.0;
+
+		for(loop=0; loop<LOOPN; loop++) {
+
+/******************************シミュレーションループ内**************************************************/
 	do{							
 		for (int i = 0; i < SensorN; i++){
 			sensor[i].set_Sensor(i);				//Sensor の id,x,yの設定
@@ -101,13 +110,15 @@ int main(void){
 			}
 		}
 
-	for(int n=0;n<SensorN;n++){
-		packet[n].disp();
+	// for(int n=0;n<SensorN;n++){
+	// 	packet[n].disp();
+	// }
+
+	decode(packet, decpn);
+	// make_graph(loop, decpn, hop_count);
+/******************************シミュレーションループ内**************************************************/
 	}
-
-	decode(packet);
-
-	std::cout << hop_count << std::endl;
+}
 	
 	return 0;
 }
