@@ -56,19 +56,6 @@ void Packet::disp(){
 	std::cout << '\n' << std::endl; 
 }
 
-
-// //次数を決定する関数
-// int degree_init(){
-// 	//とりあえずランダムに選ぶ
-// 	int max_degree = 3;
-
-// 	std::random_device rnd;     										// 非決定的な乱数生成器
-//     std::mt19937_64 mt(rnd());											// 乱数生成
-//     std::uniform_int_distribution<> rand4(0, max_degree);				// [0, 最大次数] 範囲の一様乱数
-
-//     return rand4(mt);
-// }
-
 //パケット生成
 void Packet::set_Packet(int n, int id, int *p){
 
@@ -88,7 +75,7 @@ void Packet::set_Packet(int n, int id, int *p){
 void Packet::copy_Packet(int n, int id,int *p){
 
 	Pid = n;									//パケットid
-	degree = degree_init(deg);									//次数
+	degree = degree_init(deg);					//次数
 	MixingTime = 3;								//ミキシングタイム
 	nodeNumber.push_back(id);					//ノード番号の追加	
 	
@@ -171,5 +158,13 @@ int bed(int *tbit, int *rbit){
 	return error;
 }
 
+Packet::Packet(){
+	bit = new int[BITN];
+	at_sink = 0;
+}
 
+Packet::~Packet(){
+	delete [] bit;
+	std::vector<int>().swap(nodeNumber);
+}
 

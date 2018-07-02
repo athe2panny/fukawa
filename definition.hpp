@@ -24,7 +24,7 @@ const int deg = 2;				//次数を決定する番号
 
 /**************結果データ関連*************************************/
 
-const int LOOPN = 10;							//ループ回数
+const int LOOPN = 1000;							//ループ回数
 #define FILENAME 	"./data/Eb_N0_PER.dat"		//出力ファイル名
 #define FILENAME2	"./data/Eb_N0_HOP.dat"		//出力ファイル名
 #define FILENAME3	"./data/MIXT_PER.dat"		//出力ファイル名
@@ -33,13 +33,15 @@ const int LOOPN = 10;							//ループ回数
 /**************センサクラスの宣言******************************/
 class Sensor{
 	private:
+		//メンバ変数
 		int id;
 		int hop;				// シンクノードまでのホップ数
 		double x;				// x座標
 		double y;				// y座標
-		int bit[BITN];			// ビットシーケンスデータ
+		int *bit;				// ビットシーケンスデータ　動的確保
 
 	public:
+		//メンバのアクセス関数
 		double Getx();	//xの取得
 		double Gety();	//yの取得
 		int* Getbit();	//データの先頭アドレスの取得
@@ -47,21 +49,25 @@ class Sensor{
 		void set_Sensor_hop(int hop);	    //hopを設定する関数
 		void disp();						//内容を出力するメンバ関数宣言		
 
-		Sensor():
-			hop(0){}
+	public:
+		//コンストラクタ，デストラクタ
+		Sensor();
+		~Sensor();
 	};
 
 /*************パケットクラスの宣言******************************/
 class Packet{
 	private:
+		//メンバ変数
 		int Pid;						//パケットid
 		int degree;						//次数
 		int MixingTime;					//ミキシングタイム
 		std::vector<int> nodeNumber;	//ノード番号
-		int bit[BITN];					//ビットシーケンスデータ
-		int at_sink = 0;				//シンクノードに到達した:1 途中で破棄された:0
+		int* bit;						//ビットシーケンスデータ
+		int at_sink;				//シンクノードに到達した:1 途中で破棄された:0
 
 	public:
+		//メンバへのアクセス関数
 		int Getdegree();
 		int GetMix();
 		int* Getbit();								//ビットシーケンスデータを取得する関数
@@ -75,6 +81,12 @@ class Packet{
 
 		void disp();								//内容を出力するメンバ関数宣言
 		void pushnodeNumber(int now_id);			//ノード番号を末尾に追加する関数
+
+	public:
+		//コンストラクタ，デストラクタ
+		Packet();
+		~Packet();
+
 };
 
 
@@ -120,7 +132,7 @@ void QPSK_demodulator_cd(double (*signal)[2], int (*bit));
 void ber(int loop, int (*tbit), int (*rbit));
 
 /*************************decoder********************************/
-void decode(Packet *packet, int decpn);
+void decode(Packet *packet, int& decpn);
 int vector_finder(std::vector<int> vec, int number);
 void decoded_packet(Packet *packet, std::vector<int> &decp);
 void decoding(Packet *packet, std::vector<int> &decp);

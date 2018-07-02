@@ -56,7 +56,7 @@ void decoding(Packet *packet, std::vector<int> &decp){
 	}
 }
 
-void decode(Packet *packet, int decpn){
+void decode(Packet *packet, int& decpn){
 
 	std::vector<int> decp;
 	size_t now,next;

@@ -116,7 +116,14 @@ void set_hop(std::vector<std::vector<int> > &array2D, std::vector<int> &hop_chec
 
 }
 
+Sensor::Sensor(){
+	bit = new int[BITN];
+	hop = 0;
+}
 
+Sensor::~Sensor(){
+	delete [] bit;
+}
 
 
 
