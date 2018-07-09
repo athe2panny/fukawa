@@ -57,11 +57,11 @@ void Packet::disp(){
 }
 
 //パケット生成
-void Packet::set_Packet(int n, int id, int *p){
+void Packet::set_Packet(int n, int id, int *p, int MIX){
 
 	Pid = n;									//パケットid
 	degree = degree_init(deg);					//次数
-	MixingTime = 3;								//ミキシングタイム
+	MixingTime = MIX;								//ミキシングタイム
 	nodeNumber.push_back(id);					//ノード番号の追加		
 	for(int n=0;n<BITN;n++){
 		bit[n] = p[n];							//ビットシーケンスデータのコピー
@@ -72,11 +72,11 @@ void Packet::set_Packet(int n, int id, int *p){
 
 
 //パケットコピー
-void Packet::copy_Packet(int n, int id,int *p){
+void Packet::copy_Packet(int n, int id,int *p, int MIX){
 
 	Pid = n;									//パケットid
 	degree = degree_init(deg);					//次数
-	MixingTime = 3;								//ミキシングタイム
+	MixingTime = MIX;								//ミキシングタイム
 	nodeNumber.push_back(id);					//ノード番号の追加	
 	
 	for(int n=0;n<BITN;n++){

@@ -5,11 +5,11 @@ double CNR;
 int main(void){
 
 	//シミュレーションループ関連の変数
-	int loop, Eb_N0;
+	int loop, Eb_N0, MIX=4;
 
 	//センサ，パケット，隣接行列関連の初期定義
-	Sensor *sensor;						//SensorN個のSensorの生成
-	Packet *packet;				//Packetの生成
+	// Sensor *sensor;						//SensorN個のSensorの生成
+	// Packet *packet;						//Packetの生成
 	std::vector<std::vector<int> > array2D;		//隣接行列の生成
 	std::vector<int> hop_check;					//シンクノードまでのホップ数を管理するvector
 
@@ -28,19 +28,21 @@ int main(void){
 	//送受信関連の変数
 	int now_id;				//現在いるノード番号を保持する変数
 	int transition = 0;		//遷移先idを保持する変数
-	int* received_bit;		//受信bitを保持する配列
+	int received_bit[BITN];		//受信bitを保持する配列
 
 	int *pdata, *ndata;		//パケットデータとノードデータの先頭ポインタを保持する関数
 
-/****************************************************************************************************/	
-	
+/****************************************************************************************************/
+// for(MIX=1; MIX<=10; MIX++){		//ミキシングタイムのグラフを作るとき
+// 	Eb_N0=10;
+
 for(Eb_N0=0; Eb_N0<=20; Eb_N0++) {
 		CNR = (double)Eb_N0 + 3.0;
 
 		for(loop=0; loop<LOOPN; loop++) {
 /******************************シミュレーションループ内**************************************************/
-	sensor = new Sensor[SensorN];						//SensorN個のSensorの生成
-	packet = new Packet[SensorN*Sensorb];				//Packetの生成
+	Sensor sensor[SensorN];						//SensorN個のSensorの生成
+	Packet packet[SensorN*Sensorb];				//Packetの生成
 
 	array2D = std::vector<std::vector<int> >(SensorN, std::vector<int>(SensorN));	//隣接行列の初期化
 	hop_check = std::vector<int>(SensorN);
@@ -68,9 +70,9 @@ for(Eb_N0=0; Eb_N0<=20; Eb_N0++) {
 	// std::cout << std::endl;
 
 	for(int id=0;id<SensorN;id++){		
-		packet[id].set_Packet(id,id,sensor[id].Getbit());		//パケットの生成
+		packet[id].set_Packet(id,id,sensor[id].Getbit(),MIX);		//パケットの生成
 		for(int b=1;b<Sensorb;b++){
-			packet[b*SensorN+id].copy_Packet(b*SensorN+id,id,packet[id].Getbit());	//パケットのコピー
+			packet[b*SensorN+id].copy_Packet(b*SensorN+id,id,packet[id].Getbit(),MIX);	//パケットのコピー
 		}
 	}
 	// for(int n=0;n<SensorN;n++){
@@ -81,7 +83,7 @@ for(Eb_N0=0; Eb_N0<=20; Eb_N0++) {
 	for(int pid = 0;pid<SensorN*Sensorb;pid++){										//全パケットのループ
 
 		now_id = packet[pid].Getnowid();											//現在いるノードidの初期化
-		received_bit = new int[BITN];
+		// received_bit = new int[BITN];
 
 			for(int degree = 1;degree<packet[pid].Getdegree();degree++){				//次数が1になるまで
 				for(int mix = 0;mix<packet[pid].GetMix();mix++){						//ミキシングタイムが0になるまで
@@ -121,16 +123,16 @@ for(Eb_N0=0; Eb_N0<=20; Eb_N0++) {
 			if(now_id == 0){
 				packet[pid].set_at_sink();		//シンクノードに到達しているかのフラグを追加
 			}
-			delete[] received_bit;
+			// delete[] received_bit;
 		}
 
 	decode(packet, decpn);
-	make_graph(loop, decpn, hop_count);
+	make_graph(loop, decpn, hop_count, MIX);
 /******************************メモリ解放**************************************************/
 std::vector<std::vector<int> >().swap(array2D);
 std::vector<int>().swap(hop_check);
-delete[] sensor;
-delete[] packet;
+// delete[] sensor;
+// delete[] packet;
 /******************************シミュレーションループ内**************************************************/
 	}
 }

@@ -4,15 +4,13 @@
 //次数を決定する関数
 //出力：次数	引数：分布の種類番号
 int degree_init(int deg){
-	//一様分布の最大値
-	int d_max = 4;
 
 	if(deg == 0){
-		return uni_dis(d_max);
+		return uni_dis(D_MAX);
 	}else if(deg == 1){
-		return soliton(d_max);
+		return soliton(D_MAX);
 	}else{
-		return robust_soliton(delta, d_max, M);
+		return robust_soliton(delta, D_MAX, M);
 	} 
 
 }
