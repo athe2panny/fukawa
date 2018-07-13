@@ -31,6 +31,8 @@ int uni_dis(int d_max){
 //ソリトン分布　Ω_s(d)
 int soliton(int d_max){
 	
+	int d;
+
  	std::random_device seed_gen;
   	std::default_random_engine engine(seed_gen());
 
@@ -43,7 +45,7 @@ int soliton(int d_max){
 	if(r < cdf){
 		return 1;		
 	}else{
-		for(int d=2;d<=d_max;d++){
+		for(d=2;d<=d_max;d++){
 			cdf += 1.0/(double)(d*(d-1));
 			if(r < cdf){
 				return d;

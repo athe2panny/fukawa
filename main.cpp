@@ -21,6 +21,7 @@ int main(void){
 	int id;									//ノード専用カウンタ変数
 	int mix;								//ミキシングタイム専用カウンタ変数
 	int degree; 							//次数専用カウンタ変数
+	int i,j,b,n;
 
 	//フラグ関連
 	int error; 		//エラー
@@ -51,7 +52,7 @@ for(Eb_N0=0; Eb_N0<=20; Eb_N0++) {
 	decpn = 0;								//復号済みパケットの総数
 
 	do{							
-		for (int i = 0; i < SensorN; i++){
+		for (i = 0; i < SensorN; i++){
 			sensor[i].set_Sensor(i);				//Sensor の id,x,yの設定
 		}
 
@@ -69,10 +70,10 @@ for(Eb_N0=0; Eb_N0<=20; Eb_N0++) {
 	// }
 	// std::cout << std::endl;
 
-	for(int id=0;id<SensorN;id++){		
+	for(id=0;id<SensorN;id++){		
 		packet[id].set_Packet(id,id,sensor[id].Getbit(),MIX);		//パケットの生成
-		for(int b=1;b<Sensorb;b++){
-			packet[b*SensorN+id].copy_Packet(b*SensorN+id,id,packet[id].Getbit(),MIX);	//パケットのコピー
+		for(b=1;b<Sensorb;b++){
+			packet[b*SensorN+id].set_Packet(b*SensorN+id,id,packet[id].Getbit(),MIX);	//パケットのコピー
 		}
 	}
 	// for(int n=0;n<SensorN;n++){
@@ -80,13 +81,13 @@ for(Eb_N0=0; Eb_N0<=20; Eb_N0++) {
 	// }
 
 	//パケットの送受信
-	for(int pid = 0;pid<SensorN*Sensorb;pid++){										//全パケットのループ
+	for(pid = 0;pid<SensorN*Sensorb;pid++){										//全パケットのループ
 
 		now_id = packet[pid].Getnowid();											//現在いるノードidの初期化
 		// received_bit = new int[BITN];
 
-			for(int degree = 1;degree<packet[pid].Getdegree();degree++){				//次数が1になるまで
-				for(int mix = 0;mix<packet[pid].GetMix();mix++){						//ミキシングタイムが0になるまで
+			for(degree = 1;degree<packet[pid].Getdegree();degree++){				//次数が1になるまで
+				for(mix = 0;mix<packet[pid].GetMix();mix++){						//ミキシングタイムが0になるまで
 
 					now_id = transition_id(now_id, array2D);						//遷移先ノードの決定
 					transmitter_to_receiver(hop_count, packet[pid].Getbit(), received_bit);	//ノード間送受信
@@ -107,7 +108,7 @@ for(Eb_N0=0; Eb_N0<=20; Eb_N0++) {
 				pdata = packet[pid].Getbit();
 				ndata = sensor[now_id].Getbit();
 				
-				for(int n=0;n<BITN;n++){
+				for(n=0;n<BITN;n++){
 					pdata[n] = (pdata[n] + ndata[n]) % 2;						//データの排他的論理和
 				}
 			}

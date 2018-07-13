@@ -5,7 +5,6 @@
 void Depth_firsh_search(std::vector<std::vector<int> > &array2D, int i, std::vector<int> &visit){
 
 	int j;
-
 	visit[i] = 1;				//シンクノードを始点に探索
 
 	for(j=0;j<SensorN;j++){

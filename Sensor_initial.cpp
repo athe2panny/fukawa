@@ -8,19 +8,16 @@ double cal_d(double x1, double y1, double x2, double y2){
 	return sqrt( (x2-x1)*(x2-x1) + (y2-y1)*(y2-y1) );
 }
 
-double Sensor::Getx(){
-	return x;
-}
+/***********************************Sensorクラスのメンバ関数　以下*********************************************/
+double Sensor::Getx(){return x;}
 
-double Sensor::Gety(){
-	return y;
-}
+double Sensor::Gety(){return y;}
 
 //データ部分の配列の先頭アドレスを取ってくる関数
-int* Sensor::Getbit(){
-	return bit;
-}
+int* Sensor::Getbit(){return bit;}
 
+/*ホップ数を設定する関数*/
+void Sensor::set_Sensor_hop(int n){hop = n;}
 
 //データシーケンス生成
 void bit_generator(int *bit){
@@ -35,7 +32,7 @@ void bit_generator(int *bit){
 	}
 }
 
-/*ノードを1*1エリアにばらまく関数*/
+/*ノードを1*1エリアにばらまく&ビットシーケンスの代入を行う関数*/
 void Sensor::set_Sensor(int n){
 
 	std::random_device rnd;     						// 非決定的な乱数生成器
@@ -54,11 +51,6 @@ void Sensor::set_Sensor(int n){
 	bit_generator(bit);									//ビット生成
 }
 
-/*ホップ数を設定する関数*/
-void Sensor::set_Sensor_hop(int n){
-	hop = n;
-}
-
 /*センサの内容を表示させる関数*/
 void Sensor::disp(){
 	std::cout << "センサID:" << id << std::endl;
@@ -67,12 +59,24 @@ void Sensor::disp(){
 	std::cout << "ホップ数" << hop << '\n' << std::endl; 
 }
 
+Sensor::Sensor(){
+	bit = new int[BITN];
+	hop = 0;
+}
+
+Sensor::~Sensor(){
+	delete [] bit;
+}
+
+/***********************************Sensorクラスのメンバ関数　以上*********************************************/
+
 /*センサノードの配列と二次元配列を引数として受け取り，隣接行列を作る関数*/
 void make_adjacency_matrix(Sensor *s, std::vector<std::vector<int> > &array2D){
 	double d;	//２点間距離を保持しておく変数
+	int i,j;	//カウント変数
 
-	for(int i=0;i<SensorN;i++){
-		for(int j=0;j<SensorN;j++){
+	for(i=0;i<SensorN;i++){
+		for(j=0;j<SensorN;j++){
 			d = cal_d(s[i].Getx(),s[i].Gety(),s[j].Getx(),s[j].Gety());
 			if(d <= Sensorr && d != 0 ){
 				array2D[i][j] = 1;
@@ -86,8 +90,9 @@ void set_hop(std::vector<std::vector<int> > &array2D, std::vector<int> &hop_chec
 
 	int hierarchy = 1;						//シンクノードまでのホップ数をカウントする変数
 	int count = 0;							//ループの終わりを管理する変数
+	int i,j,n;								//for文カウント変数
 
-	for(int j=0;j<SensorN;j++){
+	for(j=0;j<SensorN;j++){
 		if(array2D[0][j] == 1 && hop_check[j] == 0){	//hierarchyが登録されていない隣接ノードを対象
 			hop_check[j] = hierarchy;
 			count++;
@@ -95,10 +100,10 @@ void set_hop(std::vector<std::vector<int> > &array2D, std::vector<int> &hop_chec
 	}
 
  	while(count < SensorN - 1){							//全てのノードで設定するまで
-		for(int i=0;i<SensorN;i++){
+		for(i=0;i<SensorN;i++){
 			if(hop_check[i] == hierarchy){			//階層ごとに隣接ノードの探索
 
-				for(int j=1;j<SensorN;j++){
+				for(j=1;j<SensorN;j++){
 					if(array2D[i][j] == 1 && hop_check[j] == 0){	//hierarchyが登録されていない隣接ノードを対象
 						hop_check[j] = hierarchy + 1;
 						count++;
@@ -110,19 +115,10 @@ void set_hop(std::vector<std::vector<int> > &array2D, std::vector<int> &hop_chec
 		hierarchy++;
 	}
 
-	for (int n = 0; n < SensorN; n++){
+	for (n = 0; n < SensorN; n++){
 		s[n].set_Sensor_hop(hop_check[n]);
 	}
 
-}
-
-Sensor::Sensor(){
-	bit = new int[BITN];
-	hop = 0;
-}
-
-Sensor::~Sensor(){
-	delete [] bit;
 }
 
 
