@@ -87,16 +87,22 @@ int transition_id(int now_id, std::vector<std::vector<int> > &array2D){
 		}
 	}
 
-//とりあえずランダムに選ぶ
-	std::random_device rnd;     										// 非決定的な乱数生成器
-    std::mt19937_64 mt(rnd());											// 乱数生成
-    std::uniform_int_distribution<> rand3(0, count_adjacent_node);		// [0, 隣接ノード数] 範囲の一様乱数
+// //とりあえずランダムに選ぶ
+// 	std::random_device rnd;     										// 非決定的な乱数生成器
+//     std::mt19937_64 mt(rnd());											// 乱数生成
+//     std::uniform_int_distribution<> rand3(0, count_adjacent_node);		// [0, 隣接ノード数] 範囲の一様乱数
+
+	std::random_device seed_gen;
+  	std::default_random_engine engine(seed_gen());
+
+  	// 形状母数1.0、尺度母数1.0で分布させる
+  	std::gamma_distribution<> dist(1.0, 1.0);
 
     int next_adjacent_node;
     int next_id;
 
     do{
-	    next_adjacent_node = rand3(mt);
+	    next_adjacent_node = (int)dist(engine);    // ガンマ分布で乱数を生成する
     	for(j=0;j<SensorN;j++){
     		if(array2D[now_id][j] == 1){
     			next_adjacent_node--;
