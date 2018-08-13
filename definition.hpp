@@ -14,8 +14,8 @@ const double Ts = (1.0/SYMBOL_RATE);
 const int SYMBOLN = 64;
 const int BITN = (SYMBOLN*2);
 
-const int SensorN = 100;			//センサの数
-const int Sensorb = 4;			//センサーのパケット複製数
+const int SensorN = 50;			//センサの数
+const int Sensorb = 1;			//センサーのパケット複製数
 const double Sensorr = 0.3;		//センサが通信できる距離
 const int PacketSize = 80;		//送信パケット長
 const double delta = 0.01;		//LT符号誤り率delta
@@ -26,9 +26,9 @@ const int deg = 2;				//次数を決定する番号
 /**************結果データ関連*************************************/
 
 const int GRAPH = 0;								//0:x軸が電力雑音比　1:x軸がmixing time
-const int LOOPN = 50;							//ループ回数
-#define FILENAME 	"./data/Eb_N0_PER2321.dat"		//出力ファイル名
-#define FILENAME2	"./data/Eb_N0_HOP2321.dat"		//出力ファイル名
+const int LOOPN = 1;							//ループ回数
+#define FILENAME 	"./data/Eb_N0_PER1311.dat"		//出力ファイル名
+#define FILENAME2	"./data/Eb_N0_HOP1311.dat"		//出力ファイル名
 #define FILENAME3	"./data/MIXT_PER.dat"		//出力ファイル名
 #define FILENAME4	"./data/MIXT_HOP.dat"		//出力ファイル名
 
@@ -46,6 +46,7 @@ class Sensor{
 		//メンバのアクセス関数
 		double Getx();	//xの取得
 		double Gety();	//yの取得
+		int Gethop();	//hopの取得
 		int* Getbit();	//データの先頭アドレスの取得
 		void set_Sensor(int id);			//id,x,y,ビットシーケンスデータを設定する関数
 		void set_Sensor_hop(int hop);	    //hopを設定する関数
@@ -106,7 +107,7 @@ int check(std::vector<std::vector<int> > &array2D);													//ネットワ�
 /***********************パケット生成******************************/
 
 void bit_generator(int *bit);															//ビット生成
-int transition_id(int id, std::vector<std::vector<int> > &array2D);						//遷移先idを決定する関数
+int transition_id(int id, std::vector<std::vector<int> > &array2D, Sensor *s);						//遷移先idを決定する関数
 void transmitter_to_receiver(int& hop_count, int *transmitted_bit, int *received_bit);	//送信機>通信路>受信機の部分をまとめた関数
 int bed(int *tbit, int *rbit);															//bit error detection 誤り検出　出力:0or1
 

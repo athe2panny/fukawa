@@ -13,6 +13,8 @@ double Sensor::Getx(){return x;}
 
 double Sensor::Gety(){return y;}
 
+int Sensor::Gethop(){return hop;}
+
 //データ部分の配列の先頭アドレスを取ってくる関数
 int* Sensor::Getbit(){return bit;}
 

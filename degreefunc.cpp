@@ -69,7 +69,7 @@ int robust_soliton(double delta, int d_max, int M){
 	//Ω_s
 	Ω_s[0] = 1.0 / (double)d_max;
 	for(i=1;i<d_max;i++){
-		Ω_s[i] = 1.0 / (double) (i+1+1) * ( (i+1+1) - 1 );
+		Ω_s[i] = 1.0 / (double) ((i+1) * ( (i+1) - 1 ));
 	}
 
 	//µ
@@ -92,6 +92,7 @@ int robust_soliton(double delta, int d_max, int M){
 	for(i=1;i<d_max;i++){
 		Ω_rs[i] += Ω_rs[i-1];
 	}
+
 
 	std::random_device seed_gen;
   	std::default_random_engine engine(seed_gen());

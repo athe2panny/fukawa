@@ -75,47 +75,74 @@ Packet::~Packet(){
 
 
 //遷移先の決定
+//自分自身のノードには遷移しない
+//今まで訪問したノードのデータを加算しない
 //引数:現在いるノードID, 隣接行列 出力:遷移先ノードID となる関数
-int transition_id(int now_id, std::vector<std::vector<int> > &array2D){
+int transition_id(int now_id, std::vector<std::vector<int> > &array2D, Sensor *s){
 
-	int count_adjacent_node = 0;
-	int j;							//カウント変数
+	int count_adjacent_node = -1;	//隣接ノード数の合計
+	std::vector<int> adjacent_node; //隣接ノード番号を保持するベクタ
+	int j;
 
-	for(j=0;j<SensorN;j++){			//隣接ノードの数をカウント
+	std::random_device rnd;
+	std::mt19937_64 mt(rnd());
+
+	for(j=0;j<SensorN;j++){
 		if(array2D[now_id][j] == 1){
 			count_adjacent_node++;
+			adjacent_node.push_back(j);
 		}
 	}
+	std::uniform_int_distribution<> rand(0, count_adjacent_node);
+	return adjacent_node[rand(mt)];
 
-// //とりあえずランダムに選ぶ
+// 	int count_adjacent_node = 0;	//隣接ノード数の合計
+// 	int j;							//カウント変数
+// 	int next_id;
+
+// 	//とりあえずランダムに選ぶ
 // 	std::random_device rnd;     										// 非決定的な乱数生成器
 //     std::mt19937_64 mt(rnd());											// 乱数生成
-//     std::uniform_int_distribution<> rand3(0, count_adjacent_node);		// [0, 隣接ノード数] 範囲の一様乱数
+//     std::uniform_real_distribution<> rand(0, 1);						// [0, 隣接ノード数] 範囲の一様乱数
+//     double r = rand(mt);
+// 	int r1;
 
-	std::random_device seed_gen;
-  	std::default_random_engine engine(seed_gen());
-
-  	// 形状母数1.0、尺度母数1.0で分布させる
-  	std::gamma_distribution<> dist(1.0, 1.0);
-
-    int next_adjacent_node;
-    int next_id;
-
-    do{
-	    next_adjacent_node = (int)dist(engine);    // ガンマ分布で乱数を生成する
-    	for(j=0;j<SensorN;j++){
-    		if(array2D[now_id][j] == 1){
-    			next_adjacent_node--;
-    			if(next_adjacent_node == 0){					
-    				next_id = j;
-    				break;
-    			}
-    		}
-    	}
-    }while(now_id == next_id);											//自分自身のノードには遷移しないようにする
-
-    return next_id;
-
+// 	std::vector<int> adjacent_node; 
+	
+// 	if(r < (double)3/4){
+// //ホップ数が一つシンクノードに近づくノードに遷移する場合
+// 		for(j=0;j<SensorN;j++){
+// 			if(array2D[now_id][j] == 1 && s[j].Gethop() == s[now_id].Gethop() - 1){	//シンクノードに1近いノード
+// 				count_adjacent_node++;	//隣接ノードカウント
+// 				adjacent_node.push_back(j);	//隣接ノードの番号保持
+// 			}
+// 		}
+// 		if(count_adjacent_node == 0){
+// 			r = (double)3/4;
+// 		}
+// 	}
+// 	if(r < (double)5/6){
+// 		for(j=0;j<SensorN;j++){				
+// 			if(array2D[now_id][j] == 1 && s[j].Gethop() == s[now_id].Gethop()){	//シンクノードから同じホップ数のノード
+// 				count_adjacent_node++;	//隣接ノードカウント
+// 				adjacent_node.push_back(j);	//隣接ノードの番号保持
+// 			}
+// 		}
+// 		if(count_adjacent_node == 0){
+// 			r = (double)5/6;
+// 		}
+// 	}
+// 	if(r < 1){
+// 		for(j=0;j<SensorN;j++){				
+// 			if(array2D[now_id][j] == 1 && s[j].Gethop() == s[now_id].Gethop() + 1){	//シンクノードから1遠いノード
+// 				count_adjacent_node++;	//隣接ノードカウント
+// 				adjacent_node.push_back(j);	//隣接ノードの番号保持
+// 			}
+// 		}
+// 	}
+// 	std::uniform_int_distribution<> rand1(0, count_adjacent_node - 1);
+// 	r1 = rand1(mt);
+// 	return adjacent_node[r1];
 }
 
 //引数:ビットシーケンス 出力:ビットシーケンス 

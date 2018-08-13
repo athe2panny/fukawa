@@ -19,8 +19,8 @@ void decoded_packet(Packet *packet, std::vector<int> &decp){
 
 	for(pid = 0;pid<SensorN*Sensorb;pid++){
 		node = packet[pid].GetnodeNumber();
-		if(node.size() == 1 && vector_finder(decp, pid) == 0 && packet[pid].Getat_sink() == 1){		//ノード番号領域サイズが1で，かつ，size1配列の中にないノード番号
-			decp.push_back(pid);
+		if(node.size() == 1 && vector_finder(decp, pid%SensorN) == 0 && packet[pid].Getat_sink() == 1){		//ノード番号領域サイズが1で，かつ，size1配列の中にないノード番号
+			decp.push_back(pid%SensorN);
 		}
 	}
 }
@@ -32,12 +32,13 @@ void decoding(Packet *packet, std::vector<int> &decp){
 
 	for(n = 0;n<decp.size();n++){											//すべての復号済みのパケットnに対して
 		for(pid = 0;pid<SensorN*Sensorb;pid++){								//全パケットに対して
-			if(packet[pid].Getat_sink() == 1){
+			if(packet[pid].Getat_sink() == 1){								//シンクノードに到達しているしている時
 				std::vector<int>& node = packet[pid].GetnodeNumber();			//あるパケットのノード番号領域nodeにおいて
-				
+
 				for(i=0;i<node.size();i++){								
 					if(decp[n] == node[i] && node.size() != 1){		//復号済みパケットnと同じ番号をノード番号領域nodeのi番目に見つける この時自分自身は除く
-						
+						// std::cout << node.size() << "ノードサイズ" << std::endl;
+						// std::cout << n << "<-復号済みパケットn" << std::endl;
 						int *data = packet[pid].Getbit();
 						int *data1 = packet[decp[n]].Getbit();
 
@@ -45,11 +46,18 @@ void decoding(Packet *packet, std::vector<int> &decp){
 							data[n] = (data[n] + data1[n]) % 2;						//データの排他的論理和
 						}
 
+						for(n = 0;n<node.size();n++){
+								std::cout << node[n] << ' ';
+							}
+							std::cout <<std::endl;
+
+
 						node.erase(node.begin() + i);				//ノード番号領域から加算したパケットを除く
-							// for(int n = 0;n<node.size();n++){
-							// 	std::cout << node[n] << ' ';
-							// }
-							// std::cout <<std::endl;
+						// std::cout << i << std::endl;
+						// 	for(n = 0;n<node.size();n++){
+						// 		std::cout << node[n] << ' ';
+						// 	}
+						// 	std::cout <<std::endl;
 					}
 				}
 			}
