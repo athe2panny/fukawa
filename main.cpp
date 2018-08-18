@@ -13,7 +13,7 @@ int main(void){
 	MIX     -> 1,2,4,8
 	*/
 
-	int loop, Eb_N0,MIX=8;
+	int loop, Eb_N0,MIX=1;
 
 	std::vector<std::vector<int> > array2D;		//隣接行列の生成
 	std::vector<int> hop_check;					//シンクノードまでのホップ数を管理するvector
@@ -122,13 +122,13 @@ for(Eb_N0=20; Eb_N0<=20; Eb_N0++) {
 				}
 			}
 			//ノード番号領域の中身表示
-				std::cout << "ノード番号領域の中身";
-				std::vector<int> test = packet[pid].GetnodeNumber();
-				std::size_t size = test.size();
-				for(int i=0;i<size;i++){
-					std::cout << test[i];
-				}
-				std::cout << std::endl;
+				// std::cout << "ノード番号領域の中身";
+				// std::vector<int> test = packet[pid].GetnodeNumber();
+				// std::size_t size = test.size();
+				// for(int i=0;i<size;i++){
+				// 	std::cout << test[i];
+				// }
+				// std::cout << std::endl;
 
 
 			while(now_id != 0 && error == 0){											//シンクノードに到達するまで
@@ -145,9 +145,9 @@ for(Eb_N0=20; Eb_N0<=20; Eb_N0++) {
 			// delete[] received_bit;
 		}
 
-	for(int n=0;n<SensorN*Sensorb;n++){
-		packet[n].disp();
-	}
+	// for(int n=0;n<SensorN*Sensorb;n++){
+	// 	packet[n].disp();
+	// }
 
 	decode(packet, decpn);
 
