@@ -7,14 +7,13 @@ int main(void){
 	//シミュレーションループ関連の変数
 	
 	/*シミュレーションパラメータの変更について
-	SensorN -> 50,100,500,1000
+	SensorN -> 50,100,500,1000	(D_MAX   -> 10,20,50,100)
 	Sensorb -> 1,2,4,8
-	D_MAX   -> 50,50,50,100
 	M       -> 1,2,4,8
 	MIX     -> 1,2,4,8
 	*/
 
-	int loop, Eb_N0,MIX=4;
+	int loop, Eb_N0,MIX=8;
 
 	std::vector<std::vector<int> > array2D;		//隣接行列の生成
 	std::vector<int> hop_check;					//シンクノードまでのホップ数を管理するvector
@@ -42,7 +41,7 @@ int main(void){
 
 /****************************************************************************************************/
 
-for(Eb_N0=0; Eb_N0<=20; Eb_N0++) {
+for(Eb_N0=20; Eb_N0<=20; Eb_N0++) {
 		CNR = (double)Eb_N0 + 3.0;
 
 		for(loop=0; loop<LOOPN; loop++) {
@@ -89,14 +88,13 @@ for(Eb_N0=0; Eb_N0<=20; Eb_N0++) {
 	for(pid = 0;pid<SensorN*Sensorb;pid++){										//全パケットのループ
 
 		now_id = packet[pid].Getnowid();											//現在いるノードidの初期化
-		std::cout << now_id << std::endl;
 		// received_bit = new int[BITN];
 
 			for(degree = 1;degree<packet[pid].Getdegree();degree++){						//次数が1になるまで
 				for(mix = 0;mix<packet[pid].GetMix();mix++){								//ミキシングタイムが0になるまで
 
 					now_id = transition_id(now_id, array2D, sensor);						//遷移先ノードの決定
-					std::cout << now_id << "<-遷移先ノード" << std::endl;
+					// std::cout << now_id << "<-遷移先ノード" << std::endl;
 					transmitter_to_receiver(hop_count, packet[pid].Getbit(), received_bit);	//ノード間送受信
 					error = bed(packet[pid].Getbit(), received_bit);
 					if(error == 1){continue;}
@@ -123,14 +121,14 @@ for(Eb_N0=0; Eb_N0<=20; Eb_N0++) {
 					pdata[n] = (pdata[n] + ndata[n]) % 2;						//データの排他的論理和
 				}
 			}
-			// //ノード番号領域の中身表示
-			// 	std::cout << "ノード番号領域の中身";
-			// 	std::vector<int> test = packet[pid].GetnodeNumber();
-			// 	std::size_t size = test.size();
-			// 	for(int i=0;i<size;i++){
-			// 		std::cout << test[i];
-			// 	}
-			// 	std::cout << std::endl;
+			//ノード番号領域の中身表示
+				std::cout << "ノード番号領域の中身";
+				std::vector<int> test = packet[pid].GetnodeNumber();
+				std::size_t size = test.size();
+				for(int i=0;i<size;i++){
+					std::cout << test[i];
+				}
+				std::cout << std::endl;
 
 
 			while(now_id != 0 && error == 0){											//シンクノードに到達するまで
@@ -147,10 +145,14 @@ for(Eb_N0=0; Eb_N0<=20; Eb_N0++) {
 			// delete[] received_bit;
 		}
 
+	for(int n=0;n<SensorN*Sensorb;n++){
+		packet[n].disp();
+	}
+
 	decode(packet, decpn);
 
 
-	// for(int n=0;n<SensorN;n++){
+	// for(int n=0;n<SensorN*Sensorb;n++){
 	// 	packet[n].disp();
 	// }
 

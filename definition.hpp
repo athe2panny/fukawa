@@ -14,21 +14,21 @@ const double Ts = (1.0/SYMBOL_RATE);
 const int SYMBOLN = 64;
 const int BITN = (SYMBOLN*2);
 
-const int SensorN = 50;			//センサの数
-const int Sensorb = 1;			//センサーのパケット複製数
+const int SensorN = 100;			//センサの数
+const int Sensorb = 2;			//センサーのパケット複製数
 const double Sensorr = 0.3;		//センサが通信できる距離
 const int PacketSize = 80;		//送信パケット長
 const double delta = 0.01;		//LT符号誤り率delta
-const int D_MAX = 50;			//最大次数
-const int M = 1;				//Robast Soliton distribution M
+const int D_MAX = 20;			//最大次数
+const int M = 4;				//Robast Soliton distribution M
 const int deg = 2;				//次数を決定する番号
 
 /**************結果データ関連*************************************/
 
 const int GRAPH = 0;								//0:x軸が電力雑音比　1:x軸がmixing time
 const int LOOPN = 1;							//ループ回数
-#define FILENAME 	"./data/Eb_N0_PER1311.dat"		//出力ファイル名
-#define FILENAME2	"./data/Eb_N0_HOP1311.dat"		//出力ファイル名
+#define FILENAME 	"./data/Eb_N0_PERtest.dat"		//出力ファイル名
+#define FILENAME2	"./data/Eb_N0_HOPtest.dat"		//出力ファイル名
 #define FILENAME3	"./data/MIXT_PER.dat"		//出力ファイル名
 #define FILENAME4	"./data/MIXT_HOP.dat"		//出力ファイル名
 
