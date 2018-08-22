@@ -28,7 +28,7 @@ int uni_dis(int d_max){
   	return dist(engine);
 }
 
-//ソリトン分布　O_s(d)
+//ソリトン分布　Ω_s(d)
 int soliton(int d_max){
 	
 	int d;
@@ -55,42 +55,42 @@ int soliton(int d_max){
 	return 0;
 }
 
-//ロバストソリトン分布　O_rs(d)
+//ロバストソリトン分布　Ω_RS(d)
 int robust_soliton(double delta, int d_max, int M){
 
 	int i;
   	double R = d_max/M;
-	double beta = 0;
-	std::vector<double> O_rs(d_max, 0);
-	std::vector<double> O_s(d_max, 0);
-	std::vector<double> mu(d_max, 0);
+	double β = 0;
+	std::vector<double> Ω_rs(d_max, 0);
+	std::vector<double> Ω_s(d_max, 0);
+	std::vector<double> µ(d_max, 0);
 
 
-	//O_s
-	O_s[0] = 1.0 / (double)d_max;
+	//Ω_s
+	Ω_s[0] = 1.0 / (double)d_max;
 	for(i=1;i<d_max;i++){
-		O_s[i] = 1.0 / (double) ((i+1) * ( (i+1) - 1 ));
+		Ω_s[i] = 1.0 / (double) ((i+1) * ( (i+1) - 1 ));
 	}
 
-	//mu
+	//µ
 	for(i=0;i<M-1;i++){
-  		mu[i] = (double)1/((i+1)*M);
+  		µ[i] = (double)1/((i+1)*M);
   	}
-  	mu[M-1] = std::log(R/delta)/M;
+  	µ[M-1] = std::log(R/delta)/M;
 
-  	//beta
+  	//β
 	for(i=0;i<d_max;i++){
-		beta += O_s[i] + mu[i];
+		β += Ω_s[i] + µ[i];
 	}
 
-	//O_rs
+	//Ω_rs
 	for(i=0;i<d_max;i++){
-		O_rs[i] = (O_s[i] + mu[i]) / beta;
+		Ω_rs[i] = (Ω_s[i] + µ[i]) / β;
 	}
 
 	//累積分布関数
 	for(i=1;i<d_max;i++){
-		O_rs[i] += O_rs[i-1];
+		Ω_rs[i] += Ω_rs[i-1];
 	}
 
 
@@ -102,13 +102,12 @@ int robust_soliton(double delta, int d_max, int M){
   	double r = dist(engine);
 
   	for(i=0;i<d_max;i++){
-  		if(r<O_rs[i]){
+  		if(r<Ω_rs[i]){
   			return i+1;
   		}
   	}
   	return 0;
 }
-
 
 
 

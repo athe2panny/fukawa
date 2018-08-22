@@ -150,9 +150,11 @@ int transition_id(int now_id, std::vector<std::vector<int> > &array2D, Sensor *s
 //ついでにhop数もカウントする
 void transmitter_to_receiver(int& hop_count, int *transmitted_bit, int *received_bit){
 
-	double transmitted_signal[SYMBOLN][2], received_signal[SYMBOLN][2];
+	double transmitted_signal[SYMBOLN+1][2], received_signal[SYMBOLN+1][2];
+	double h[SYMBOLN+1][2];	/*チャネル*/
 
 	transmitter(transmitted_bit, transmitted_signal);
+	// fading(transmitted_signal, received_signal, h);
 	awgn(transmitted_signal, received_signal);
 	receiver(received_signal, received_bit);
 	hop_count++;	//ホップ数カウント

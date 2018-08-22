@@ -10,10 +10,10 @@ int main(void){
 	SensorN -> 50,100,500,1000	(D_MAX   -> 10,20,50,100)
 	Sensorb -> 1,2,4,8
 	M       -> 1,2,4,8
-	MIX     -> 1,2,4,8
+	MIX     -> 1,2,4,8,16
 	*/
 
-	int loop, Eb_N0,MIX=1;
+	int loop, Eb_N0,MIX=2;
 
 	std::vector<std::vector<int> > array2D;		//隣接行列の生成
 	std::vector<int> hop_check;					//シンクノードまでのホップ数を管理するvector
@@ -37,11 +37,12 @@ int main(void){
 	int transition = 0;		//遷移先idを保持する変数
 	int received_bit[BITN];		//受信bitを保持する配列
 
+
 	int *pdata, *ndata;		//パケットデータとノードデータの先頭ポインタを保持する関数
 
 /****************************************************************************************************/
 
-for(Eb_N0=20; Eb_N0<=20; Eb_N0++) {
+for(Eb_N0=5; Eb_N0<=15; Eb_N0++) {
 		CNR = (double)Eb_N0 + 3.0;
 
 		for(loop=0; loop<LOOPN; loop++) {
@@ -88,7 +89,7 @@ for(Eb_N0=20; Eb_N0<=20; Eb_N0++) {
 	for(pid = 0;pid<SensorN*Sensorb;pid++){										//全パケットのループ
 
 		now_id = packet[pid].Getnowid();											//現在いるノードidの初期化
-		// received_bit = new int[BITN];
+
 
 			for(degree = 1;degree<packet[pid].Getdegree();degree++){						//次数が1になるまで
 				for(mix = 0;mix<packet[pid].GetMix();mix++){								//ミキシングタイムが0になるまで
@@ -101,6 +102,7 @@ for(Eb_N0=20; Eb_N0<=20; Eb_N0++) {
 				
 				}
 				//ミキシングタイム0になった時の遷移先ノードが既にパケットに加算されているノード番号と一致していた場合は次の遷移先ノードを加算する
+				
 				xored = 0;
 				std::vector<int> xorednode = packet[pid].GetnodeNumber();	//既に加算されているノード番号の検索
 				for(i=0;i<xorednode.size();i++){
@@ -121,14 +123,15 @@ for(Eb_N0=20; Eb_N0<=20; Eb_N0++) {
 					pdata[n] = (pdata[n] + ndata[n]) % 2;						//データの排他的論理和
 				}
 			}
-			//ノード番号領域の中身表示
-				// std::cout << "ノード番号領域の中身";
-				// std::vector<int> test = packet[pid].GetnodeNumber();
-				// std::size_t size = test.size();
-				// for(int i=0;i<size;i++){
-				// 	std::cout << test[i];
-				// }
-				// std::cout << std::endl;
+
+			// // ノード番号領域の中身表示
+			// 	std::cout << "ノード番号領域の中身";
+			// 	std::vector<int> test = packet[pid].GetnodeNumber();
+			// 	std::size_t size = test.size();
+			// 	for(int i=0;i<size;i++){
+			// 		std::cout << test[i];
+			// 	}
+			// 	std::cout << std::endl;
 
 
 			while(now_id != 0 && error == 0){											//シンクノードに到達するまで
@@ -138,7 +141,6 @@ for(Eb_N0=20; Eb_N0<=20; Eb_N0++) {
 				error = bed(packet[pid].Getbit(), received_bit);
 				if(error == 1){break;}
 			}
-
 			if(now_id == 0){
 				packet[pid].set_at_sink();		//シンクノードに到達しているかのフラグを追加
 			}

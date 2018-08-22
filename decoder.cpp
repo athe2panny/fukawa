@@ -45,20 +45,20 @@ void decoding(Packet *packet, std::vector<int> &decp){
 							data[m] = data[m] xor data1[m];						//データの排他的論理和
 						}
 							
-							std::cout << pid << "パケットid" <<  std::endl;
-							for(m = 0;m<node.size();m++){
-								std::cout << node[m] << ' ';
-							}
-							std::cout << std::endl;
+							// std::cout << pid << "パケットid" <<  std::endl;
+							// for(m = 0;m<node.size();m++){
+							// 	std::cout << node[m] << ' ';
+							// }
+							// std::cout << std::endl;
 
 
 
 						node.erase(node.begin() + i);				//ノード番号領域から加算したパケットを除く
-						std::cout << i << std::endl;
-							for(m = 0;m<node.size();m++){
-								std::cout << node[m] << ' ';
-							}
-							std::cout << std::endl;
+						// std::cout << i << std::endl;
+							// for(m = 0;m<node.size();m++){
+							// 	std::cout << node[m] << ' ';
+							// }
+							// std::cout << std::endl;
 					}
 				}
 			}
@@ -72,18 +72,19 @@ void decode(Packet *packet, int& decpn){
 	size_t now,next;
 	int i;
 
+
 	do{
 		now = decp.size();	
 		decoded_packet(packet, decp);
 
-		for(int i=0;i<decp.size();i++){
-			std::cout << decp[i] << ' ';
-		}
-		std::cout << std::endl;
+		// for(int i=0;i<decp.size();i++){
+		// 	std::cout << decp[i] << ' ';
+		// }
+		// std::cout << std::endl;
 
 		decoding(packet, decp);
 		next = decp.size();
-		std::cout << now << ' ' << next << "<- 復号されたノードの数" << std::endl;
+		// std::cout << now << ' ' << next << "<- 復号されたノードの数" << std::endl;
 	}while(now != next);				//新しく復号されなければ終了
 
 	for(i=0;i<decp.size();i++){
@@ -92,7 +93,7 @@ void decode(Packet *packet, int& decpn){
 		}
 	}
 	decpn = now;
-	std::cout << decpn << std::endl;
+	// std::cout << decpn << std::endl;
 }
 
 						
