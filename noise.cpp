@@ -10,7 +10,7 @@ void awgn(double (*transmitted_signal)[2], double (*received_signal)[2]){
 
 	gamma = pow(10.0, CNR / 10.0);
 
-	for(n=0; n<SYMBOLN+1; n++) {
+	for(n=0; n<BURST; n++) {
 		r1 = (double)rand()/RAND_MAX;
 		r2 = (double)rand()/RAND_MAX;
 		if(r1 <= 1.0e-6) {

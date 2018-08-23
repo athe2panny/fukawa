@@ -1,40 +1,49 @@
 #include "definition.hpp"
-// h(i)*s(i)を返す関数
-void fading(double (*input_signal)[2], double (*output_signal)[2], double h[SYMBOLN][2]){
-	
-	int n;/*シンボル数のカウンタ*/
-	double amp[8], phase[8], theta[8];/*振幅，周波数，到来角*/	
-	double r1, r2;/*ランダム*/
 
-	for (int i = 0; i < 2; i++){
-		for (n = 0; n < SYMBOLN; n++){		
-			h[n][i] = 0;	/* 伝送路特性 初期化*/
+extern double h[PATH][SYMBOLN][2];
+
+void multipath_propagation(double (*transmit_signal)[2], double (*received_signal)[2]){
+	double a[PATH][COMPONENT], theta[PATH][COMPONENT], phi[PATH][COMPONENT];
+	double path_power, component_power, amp, phase;
+	int d, n, i;
+
+	for(d = 0; d < PATH; d++){
+		for(i = 0; i < SYMBOLN; i++){
+			h[d][i][0] = 0.0;
+			h[d][i][1] = 0.0;
 		}
 	}
 
-	for (int k = 0; k < 8; k++){
-
-		r1 = (double)rand()/RAND_MAX;
-		r2 = (double)rand()/RAND_MAX;
-		theta[k] = 2*PI*(double)rand()/RAND_MAX;
-		if(r1 <= 1.0e-6) {
-			r1 = 1.0e-6;
-		}
-		amp[k] = sqrt(-log(r1)/8);
-		phase[k] = 2.0 * PI * r2;
+	for(i = 0; i < BURST; i++){
+		received_signal[i][0] = 0.0;
+		received_signal[i][1] = 0.0;
 	}
-	// printf("%f %f %f\n",amp[0],theta[0],phase[0]);
 
-
-	for(n=0; n<SYMBOLN+1; n++){
-		for (int k = 0; k < 8; k++){
-			/* 8波の足し合わせ */
-			h[n][0] = h[n][0] + amp[k]*cos(2*PI*FD*cos(theta[k])*Ts*n + phase[k]);
-			h[n][1] = h[n][1] + amp[k]*sin(2*PI*FD*cos(theta[k])*Ts*n + phase[k]);
+	for(d = 0; d < PATH; d++){
+		for(n = 0; n < COMPONENT; n++){
+			a[d][n] = (double)rand() / RAND_MAX;
+			theta[d][n] = (double)rand() / RAND_MAX * 2.0 * PI;
+			phi[d][n] = (double)rand() / RAND_MAX * 2.0 * PI;
+			if(a[d][n] <= 1.0e-6) a[d][n] = 1.0e-6;
 		}
-
-		output_signal[n][0] = input_signal[n][0]*h[n][0] - input_signal[n][1]*h[n][1];
-		output_signal[n][1] = input_signal[n][0]*h[n][1] + input_signal[n][1]*h[n][0];
 	}
-	// printf("%f\n",h[n][0] );
+
+	path_power = sqrt(1.0/PATH);
+	component_power = sqrt(1.0/COMPONENT);
+
+	for(i = 0; i < SYMBOLN; i++){
+		for(d = 0; d < PATH; d++){
+			for(n = 0; n < COMPONENT; n++){
+				amp = path_power * component_power * sqrt(-log(a[d][n]));
+				phase = 2.0 * PI * FD * cos(theta[d][n]) * i * Ts + phi[d][n];
+				h[d][i][0] += amp * cos(phase);
+				h[d][i][1] += amp * sin(phase);
+			}
+			
+			if((i+d) < BURST) {
+				received_signal[i+d][0] += transmit_signal[i][0] * h[d][i][0] - transmit_signal[i][1] * h[d][i][1];
+				received_signal[i+d][1] += transmit_signal[i][0] * h[d][i][1] + transmit_signal[i][1] * h[d][i][0];
+			}
+		}
+	}
 }

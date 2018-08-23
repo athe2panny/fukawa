@@ -148,13 +148,14 @@ int transition_id(int now_id, std::vector<std::vector<int> > &array2D, Sensor *s
 //引数:ビットシーケンス 出力:ビットシーケンス 
 //ビットシーケンスから通信路を通した時のビットシーケンスを返す関数
 //ついでにhop数もカウントする
+double h[PATH][SYMBOLN][2];	/*チャネル*/
 void transmitter_to_receiver(int& hop_count, int *transmitted_bit, int *received_bit){
 
-	double transmitted_signal[SYMBOLN+1][2], received_signal[SYMBOLN+1][2];
-	double h[SYMBOLN+1][2];	/*チャネル*/
+	double transmitted_signal[SYMBOLN][2], received_signal[SYMBOLN][2];
+
 
 	transmitter(transmitted_bit, transmitted_signal);
-	// fading(transmitted_signal, received_signal, h);
+	multipath_propagation(transmitted_signal, received_signal);
 	awgn(transmitted_signal, received_signal);
 	receiver(received_signal, received_bit);
 	hop_count++;	//ホップ数カウント
