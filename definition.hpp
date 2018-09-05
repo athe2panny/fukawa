@@ -17,27 +17,27 @@
 #define BITN 128
 #define SYMBOLN (BITN/2 + DIFF)
 
-const int SensorN = 500;			//センサの数
+const int SensorN = 100;			//センサの数
 const int Sensorb = 2;			//センサーのパケット複製数
 const double Sensorr = 0.05;		//センサが通信できる距離
 const int PacketSize = 80;		//送信パケット長
 const double delta = 0.01;		//LT符号誤り率delta
 const int D_MAX = 50;			//最大次数
-const int M = 1;				//Robast Soliton distribution M
+const int M = 3;				//Robast Soliton distribution M
 const int deg = 2;				//次数を決定する番号
 /*---------------------------------------------------------*/
 /* Multipath                                               */
 /*---------------------------------------------------------*/
 #define BURST			(SYMBOLN + PATH-1)
 #define COMPONENT		8
-#define PATH			2
+#define PATH			1
 #define FD				0.0
 
 /**************結果データ関連*************************************/
 const int GRAPH = 0;								//0:x軸が電力雑音比　1:x軸がmixing time
-const int LOOPN = 1000;						//ループ回数
-#define FILENAME 	"./data/Eb_N0_PER_500_2_1_2.dat"		//出力ファイル名
-#define FILENAME2	"./data/Eb_N0_HOP_500_2_1_2.dat"		//出力ファイル名
+const int LOOPN = 500;						//ループ回数
+#define FILENAME 	"./data/Eb_N0_PER_100_2_3_8_14~20.dat"		//出力ファイル名
+#define FILENAME2	"./data/Eb_N0_HOP_100_2_3_8_14~20.dat"		//出力ファイル名
 #define FILENAME3	"./data/MIXT_PER.dat"		//出力ファイル名
 #define FILENAME4	"./data/MIXT_HOP.dat"		//出力ファイル名
 

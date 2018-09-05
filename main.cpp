@@ -13,7 +13,7 @@ int main(void){
 	MIX     -> 1,2,4,8,16
 	*/
 
-	int loop, Eb_N0,MIX=2;
+	int loop, Eb_N0,MIX=8;
 
 	std::vector<std::vector<int> > array2D;		//隣接行列の生成
 	std::vector<int> hop_check;					//シンクノードまでのホップ数を管理するvector
@@ -42,7 +42,7 @@ int main(void){
 
 /****************************************************************************************************/
 
-for(Eb_N0=5; Eb_N0<=15; Eb_N0++) {
+for(Eb_N0=14; Eb_N0<=20; Eb_N0++) {
 		CNR = (double)Eb_N0 + 3.0;
 
 		for(loop=0; loop<LOOPN; loop++) {
