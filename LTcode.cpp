@@ -73,7 +73,6 @@ Packet::~Packet(){
 /***********************************Packetクラスのメンバ関数　以上*********************************************/
 
 
-
 //遷移先の決定
 //自分自身のノードには遷移しない
 //今まで訪問したノードのデータを加算しない
@@ -95,55 +94,8 @@ int transition_id(int now_id, std::vector<std::vector<int> > &array2D, Sensor *s
 	}
 	std::uniform_int_distribution<> rand(0, count_adjacent_node);
 	return adjacent_node[rand(mt)];
-
-// 	int count_adjacent_node = 0;	//隣接ノード数の合計
-// 	int j;							//カウント変数
-// 	int next_id;
-
-// 	//とりあえずランダムに選ぶ
-// 	std::random_device rnd;     										// 非決定的な乱数生成器
-//     std::mt19937_64 mt(rnd());											// 乱数生成
-//     std::uniform_real_distribution<> rand(0, 1);						// [0, 隣接ノード数] 範囲の一様乱数
-//     double r = rand(mt);
-// 	int r1;
-
-// 	std::vector<int> adjacent_node; 
-	
-// 	if(r < (double)3/4){
-// //ホップ数が一つシンクノードに近づくノードに遷移する場合
-// 		for(j=0;j<SensorN;j++){
-// 			if(array2D[now_id][j] == 1 && s[j].Gethop() == s[now_id].Gethop() - 1){	//シンクノードに1近いノード
-// 				count_adjacent_node++;	//隣接ノードカウント
-// 				adjacent_node.push_back(j);	//隣接ノードの番号保持
-// 			}
-// 		}
-// 		if(count_adjacent_node == 0){
-// 			r = (double)3/4;
-// 		}
-// 	}
-// 	if(r < (double)5/6){
-// 		for(j=0;j<SensorN;j++){				
-// 			if(array2D[now_id][j] == 1 && s[j].Gethop() == s[now_id].Gethop()){	//シンクノードから同じホップ数のノード
-// 				count_adjacent_node++;	//隣接ノードカウント
-// 				adjacent_node.push_back(j);	//隣接ノードの番号保持
-// 			}
-// 		}
-// 		if(count_adjacent_node == 0){
-// 			r = (double)5/6;
-// 		}
-// 	}
-// 	if(r < 1){
-// 		for(j=0;j<SensorN;j++){				
-// 			if(array2D[now_id][j] == 1 && s[j].Gethop() == s[now_id].Gethop() + 1){	//シンクノードから1遠いノード
-// 				count_adjacent_node++;	//隣接ノードカウント
-// 				adjacent_node.push_back(j);	//隣接ノードの番号保持
-// 			}
-// 		}
-// 	}
-// 	std::uniform_int_distribution<> rand1(0, count_adjacent_node - 1);
-// 	r1 = rand1(mt);
-// 	return adjacent_node[r1];
 }
+
 
 //引数:ビットシーケンス 出力:ビットシーケンス 
 //ビットシーケンスから通信路を通した時のビットシーケンスを返す関数

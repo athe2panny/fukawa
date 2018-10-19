@@ -35,7 +35,7 @@ const int deg = 2;				//次数を決定する番号
 
 /**************結果データ関連*************************************/
 const int GRAPH = 0;								//0:x軸が電力雑音比　1:x軸がmixing time
-const int LOOPN = 500;						//ループ回数
+const int LOOPN = 10;						//ループ回数
 #define FILENAME 	"./data/Eb_N0_PER_100_2_3_8_14~20.dat"		//出力ファイル名
 #define FILENAME2	"./data/Eb_N0_HOP_100_2_3_8_14~20.dat"		//出力ファイル名
 #define FILENAME3	"./data/MIXT_PER.dat"		//出力ファイル名
@@ -116,7 +116,8 @@ int check(std::vector<std::vector<int> > &array2D);													//ネットワ�
 /***********************パケット生成******************************/
 
 void bit_generator(int *bit);															//ビット生成
-int transition_id(int id, std::vector<std::vector<int> > &array2D, Sensor *s);						//遷移先idを決定する関数
+int transition_id(int id, std::vector<std::vector<int> > &array2D, Sensor *s);			//遷移先idを決定する関数
+int transition_id_tosink(int id, std::vector<std::vector<int> > &array2D, Sensor *s);	
 void transmitter_to_receiver(int& hop_count, int *transmitted_bit, int *received_bit);	//送信機>通信路>受信機の部分をまとめた関数
 int bed(int *tbit, int *rbit);															//bit error detection 誤り検出　出力:0or1
 

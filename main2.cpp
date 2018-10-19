@@ -33,7 +33,8 @@ int main(void){
 	int xored;		//ノード加算済みフラグ
 	
 	//送受信関連の変数
-	int now_id;				//現在いるノード番号を保持する変数
+	int now_id,next_id;				//現在いるノード番号を保持する変数
+	int max_retransmission = 0;		//最大再送回数を管理するカウンタ変数		
 	int transition = 0;		//遷移先idを保持する変数
 	int received_bit[BITN];		//受信bitを保持する配列
 
@@ -42,10 +43,10 @@ int main(void){
 
 /****************************************************************************************************/
 
-for(Eb_N0=20; Eb_N0<=20; Eb_N0++) {
+for(Eb_N0=10; Eb_N0<=10; Eb_N0++) {
 		CNR = (double)Eb_N0 + 3.0;
 
-		for(loop=0; loop<LOOPN; loop++) {
+	for(loop=0; loop<LOOPN; loop++) {
 /******************************シミュレーションループ内**************************************************/
 	Sensor sensor[SensorN];						//SensorN個のSensorの生成
 	Packet packet[SensorN*Sensorb];				//Packetの生成
@@ -88,64 +89,28 @@ for(Eb_N0=20; Eb_N0<=20; Eb_N0++) {
 	//パケットの送受信
 	for(pid = 0;pid<SensorN*Sensorb;pid++){										//全パケットのループ
 
-		now_id = packet[pid].Getnowid();											//現在いるノードidの初期化
+		now_id = packet[pid].Getnowid();												//現在いるノードidの初期化
 
-
-			for(degree = 1;degree<packet[pid].Getdegree();degree++){						//次数が1になるまで
-				for(mix = 0;mix<packet[pid].GetMix();mix++){								//ミキシングタイムが0になるまで
-
-					now_id = transition_id(now_id, array2D, sensor);						//遷移先ノードの決定
-					// std::cout << now_id << "<-遷移先ノード" << std::endl;
-					transmitter_to_receiver(hop_count, packet[pid].Getbit(), received_bit);	//ノード間送受信
-					error = bed(packet[pid].Getbit(), received_bit);
-					if(error == 1){continue;}
-				
-				}
-				//ミキシングタイム0になった時の遷移先ノードが既にパケットに加算されているノード番号と一致していた場合は次の遷移先ノードを加算する
-				
-				xored = 0;
-				std::vector<int> xorednode = packet[pid].GetnodeNumber();	//既に加算されているノード番号の検索
-				for(i=0;i<xorednode.size();i++){
-					if(now_id == xorednode[i]){
-						degree--;
-						xored = 1;
-					}
-				}
-				if(xored == 1){continue;}
-
-				//パケットのノード番号追加,データの合成
-				packet[pid].pushnodeNumber(now_id);					//ノード番号の追加
-				
-				pdata = packet[pid].Getbit();
-				ndata = sensor[now_id].Getbit();
-				
-				for(n=0;n<BITN;n++){
-					pdata[n] = (pdata[n] + ndata[n]) % 2;						//データの排他的論理和
-				}
-			}
-
-			// // ノード番号領域の中身表示
-			// 	std::cout << "ノード番号領域の中身";
-			// 	std::vector<int> test = packet[pid].GetnodeNumber();
-			// 	std::size_t size = test.size();
-			// 	for(int i=0;i<size;i++){
-			// 		std::cout << test[i];
-			// 	}
-			// 	std::cout << std::endl;
-
-
-			while(now_id != 0 && error == 0){											//シンクノードに到達するまで
-			
-				now_id = transition_id_tosink(now_id, array2D, sensor);						//遷移先ノードの決定
+		while(now_id != 0){																//シンクノードに到達するまで
+			if(error == 0){																//エラーがない場合
+				now_id = transition_id_tosink(now_id, array2D, sensor);					//遷移先ノードの決定
 				transmitter_to_receiver(hop_count, packet[pid].Getbit(), received_bit);	//ノード間送受信
 				error = bed(packet[pid].Getbit(), received_bit);
-				if(error == 1){break;}
 			}
-			if(now_id == 0){
-				packet[pid].set_at_sink();		//シンクノードに到達しているかのフラグを追加
+			while(error == 1 && max_retransmission < 7){															//エラーがある場合は再送
+				transmitter_to_receiver(hop_count, packet[pid].Getbit(), received_bit);	//ノード間送受信
+				error = bed(packet[pid].Getbit(), received_bit);
+				max_retransmission++;
 			}
-			// delete[] received_bit;
+			if(max_retransmission == 7){
+				break;
+			}
 		}
+		if(now_id == 0){
+			packet[pid].set_at_sink();		//シンクノードに到達しているかのフラグを追加
+		}
+			// delete[] received_bit;
+	}
 
 	// for(int n=0;n<SensorN*Sensorb;n++){
 	// 	packet[n].disp();
